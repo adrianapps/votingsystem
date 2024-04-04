@@ -1,0 +1,6 @@
+{% for election in elections %}
+
+<a href="{% url 'election:election-detail' election.id %}">{{ election.title }}</a> <br>
+
+
+{% endfor %}
