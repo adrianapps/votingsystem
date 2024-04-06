@@ -1,13 +1,25 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
 
 from .models import Election, Candidate, Vote, Voter
+from .services import create_vote
 
 
 class ElectionList(ListView):
     model = Election
     context_object_name = 'elections'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        elections = context['elections']
+
+        has_voted = [election.id for election in elections if Voter.objects.filter(
+            user=self.request.user, election=election, has_voted=True)]
+        context['has_voted'] = has_voted
+        return context
 
 
 class ElectionDetail(DetailView):
@@ -19,27 +31,29 @@ class ElectionDetail(DetailView):
         election = self.object
         candidates = election.candidate_set.all()
         context['candidates'] = candidates
+
         return context
 
 
+@login_required
 def vote(request, pk):
     election = get_object_or_404(Election, pk=pk)
-    voter = get_object_or_404(Voter, election=election, user=request.user)
-
-    if voter.has_voted:
-        messages.error(request, 'You have already voted in this election')
-        return redirect('election:election-list')
 
     try:
-        selected_candidate = election.candidate_set.get(pk=request.POST['candidate'])
+        voter = get_object_or_404(Voter, user=request.user, election=election)
+    except Voter.DoesNotExist:
+        raise Http404('You are not a voter')
+
+    if voter.has_voted:
+        raise Http404('You have already voted')
+
+    try:
+        selected_candidates = election.candidate_set.get(pk=request.POST['candidate'])
     except (KeyError, Candidate.DoesNotExist):
         messages.error(request, 'Invalid candidate selected')
-        return redirect('election:election-list')
+        return redirect(election.get_absolute_url())
 
-    choice = Vote.objects.create(election=election)
-    choice.chosen_candidates.set([selected_candidate])
-    voter.has_voted = True
-    voter.save()
+    create_vote(election, selected_candidates, voter)
 
     messages.success(request, 'Your vote has been cast successfully')
     return redirect('election:election-list')

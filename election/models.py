@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.http import Http404
+from django.shortcuts import reverse, get_object_or_404, redirect
 from django.db import models
 
 
@@ -16,6 +18,9 @@ class Election(models.Model):
 
     def candidate_vote_count(self, candidate):
         return self.vote_set.filter(chosen_candidates=candidate).count()
+
+    def get_absolute_url(self):
+        return reverse('election:election-detail', kwargs={'pk': self.pk})
 
 
 class Party(models.Model):
@@ -48,6 +53,7 @@ class Voter(models.Model):
 class Vote(models.Model):
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
     chosen_candidates = models.ManyToManyField(Candidate, related_name='votes')
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         candidates_str = ", ".join(candidate.name for candidate in self.chosen_candidates.all())
@@ -59,3 +65,5 @@ class Vote(models.Model):
     def clean(self):
         if self.election.max_candidates_choice < self.chosen_candidate_count():
             raise ValidationError(f"You can only choose up to {self.election.max_candidates_choice} candidates")
+        elif self.timestamp >= self.election.end_date:
+            raise ValidationError(f"The {self.election.title} has already ended")
