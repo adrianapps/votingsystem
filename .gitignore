@@ -1,3 +1,10 @@
-/venv/
-*.xml
+*.pyc
+__pycache__/
+venv/
+.idea/
 *.iml
+*.xml
+*.log
+*.sqlite
+*.db
+/db.sqlite3
