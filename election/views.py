@@ -61,4 +61,11 @@ def vote(request, pk):
     return redirect('election:election-list')
 
 def contact_view(request):
+<<<<<<< HEAD
     return render(request, 'contact.html')
+=======
+    return render(request, 'contact.html')
+
+def election_view(request):
+    return render(request, 'election_list.html')
+>>>>>>> 8b4286f85ec042e6f46431ba8031dd8c4cd9a798
