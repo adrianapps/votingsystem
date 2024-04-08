@@ -60,5 +60,5 @@ def vote(request, pk):
     messages.success(request, 'Your vote has been cast successfully')
     return redirect('election:election-list')
 
-def contact(request):
+def contact_view(request):
     return render(request, 'contact.html')
