@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
+from django.shortcuts import render
 
 from .models import Election, Candidate, Vote, Voter
 from .services import create_vote
@@ -58,3 +59,9 @@ def vote(request, pk):
 
     messages.success(request, 'Your vote has been cast successfully')
     return redirect('election:election-list')
+
+def contact_view(request):
+    return render(request, 'contact.html')
+
+def election_view(request):
+    return render(request, 'election_list.html')

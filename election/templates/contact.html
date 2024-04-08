@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Dodaj stylizację CSS tutaj */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            padding-top: 20%; /* Adjust as needed */
+            margin: auto; /* Centrowanie kontenera */
+            max-width: 800px; /* Maksymalna szerokość kontenera */
+            text-align: center; /* Wyśrodkowanie zawartości w poziomie */
+        }
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%; /* Okrągły avatar */
+            margin: 0 auto 20px; /* Wyśrodkowanie avataru i dodanie odstępu na dole */
+            transition: transform 0.3s ease; /* Dodanie animacji transformacji */
+        }
+        .avatar:hover {
+            transform: translateY(-10px); /* Unoszenie avatara przy najechaniu kursorem */
+        }
+        .mail {
+            width: 100px;
+            height: auto;
+            margin: 20px auto; /* Wyśrodkowanie obrazka poczty i dodanie odstępu na górze i dole */
+        }
+        /* Footer styles */
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #333; /* Kolor tła stopki */
+            color: #fff; /* Kolor tekstu stopki */
+            padding: 3px 0; /* Wewnętrzny odstęp stopki */
+            text-align: center; /* Wyśrodkowanie tekstu */
+        }
+        .btn {
+            position: relative;
+            background-color: #04AA6D;
+            border: none;
+            font-size: 28px;
+            color: #FFFFFF;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+            text-decoration: none;
+            overflow: hidden;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+        .btn:after {
+            content: "";
+            background: #90EE90;
+            display: block;
+            position: absolute;
+            padding-top: 2500%;
+            padding-left: 150%;
+            margin-left: -20px!important;
+            margin-top: -120%;
+            opacity: 0;
+            transition: all 0.8s;
+        }
+        .btn:hover:after {
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 0s;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Głosowanie</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Main Page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About Us</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'contact' %}">Contact <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container text-center">
+        <div class="row">
+            {% load static %}
+            <div class="col-md-4">
+                <a href="https://github.com/tempestpulse" target="_blank">
+                    <img src="{% static 'afroroger.jpg' %}" class="avatar" alt="Avatar 1">
+                </a>
+                <a href="https://github.com/tempestpulse" class="btn btn-primary btn-lg btn-block" target="_blank">GitHub</a>
+            </div>
+            <div class="col-md-4">
+                <a href="https://github.com/szel0" target="_blank">
+                    <img src="{% static 'github_default.png' %}" class="avatar" alt="Avatar 2">
+                </a>
+                <a href="https://github.com/szel0" class="btn btn-primary btn-lg btn-block" target="_blank">GitHub</a>
+            </div>
+            <div class="col-md-4">
+                <a href="https://github.com/pakupek" target="_blank">
+                    <img src="{%static 'pakupek.jpg' %}" class="avatar" alt="Avatar 3">
+                </a>
+                <a href="https://github.com/pakupek" class="btn btn-primary btn-lg btn-block" target="_blank">GitHub</a>
+            </div>
+        </div>
+        
+        <p>Skontaktuj się z nami również pod adresem email: example@example.com</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
