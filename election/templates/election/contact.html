@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us</title>
@@ -8,8 +9,7 @@
     integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* Dodaj stylizację CSS tutaj */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
-
+    
         body, html{
             margin: 0;
             padding: 0;
@@ -26,6 +26,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            background: url({%static 'contact_us_2.jpg' %});
         }
 
         .contact .content
@@ -184,7 +185,10 @@
                 width: 100%;
             }
         }
-
+        /* Additional styles for content */
+        .list-group-item {
+            font-size: 1.2em; /* Adjust as needed */
+        }
         /* Footer styles */
         footer {
             position: fixed;
@@ -213,7 +217,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Main Page</a>
+                    <a class="nav-link" href="{% url 'election:election-list' %}">Main Page</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">About Us</a>
