@@ -43,14 +43,26 @@
         .container {
             position: relative;
             z-index: 1;
-            padding-top: 20%; /* Adjust as needed */
+            padding-top: 20%; 
+            margin: auto; /* Centrowanie kontenera */
+            max-width: 800px; /* Maksymalna szerokość kontenera */
         }
         .jumbotron {
-            background-color: rgba(255, 255, 255, 0.8); /* Adjust as needed */
+            background-color: rgba(255, 255, 255, 0.8); 
         }
         /* Additional styles for content */
         .list-group-item {
-            font-size: 1.2em; /* Adjust as needed */
+            font-size: 1.2em; 
+        }
+        /* Footer styles */
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #333; /* Kolor tła stopki */
+            color: #fff; /* Kolor tekstu stopki */
+            padding: 2px 0; /* Wewnętrzny odstęp stopki */
+            text-align: center; /* Wyśrodkowanie tekstu */
         }
     </style>
 </head>
@@ -64,7 +76,7 @@
     <div class="overlay"></div> <!-- Dodaj przyciemnione tło -->
 </div>
 
-<div class="container">
+<div class="container text-center">
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <div class="jumbotron mt-5">
@@ -85,6 +97,10 @@
         </div>
     </div>
 </div>
+
+<footer>
+    <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
+</footer>
 
 </body>
 </html>
