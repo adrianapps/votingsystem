@@ -20,5 +20,6 @@ from election import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('election.urls'))
+    path('', include('election.urls')),
+    path('contact/', views.contact_view, name="contact_view")
 ]
