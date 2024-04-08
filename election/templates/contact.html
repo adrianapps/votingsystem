@@ -26,6 +26,15 @@
             height: 150px;
             border-radius: 50%; /* Okrągły avatar */
             margin: 0 auto 20px; /* Wyśrodkowanie avataru i dodanie odstępu na dole */
+            transition: transform 0.3s ease; /* Dodanie animacji transformacji */
+        }
+        .avatar:hover {
+            transform: translateY(-10px); /* Unoszenie avatara przy najechaniu kursorem */
+        }
+        .mail {
+            width: 100px;
+            height: auto;
+            margin: 20px auto; /* Wyśrodkowanie obrazka poczty i dodanie odstępu na górze i dole */
         }
         /* Footer styles */
         footer {
@@ -34,14 +43,46 @@
             width: 100%;
             background-color: #333; /* Kolor tła stopki */
             color: #fff; /* Kolor tekstu stopki */
-            padding: 10px 0; /* Wewnętrzny odstęp stopki */
+            padding: 3px 0; /* Wewnętrzny odstęp stopki */
             text-align: center; /* Wyśrodkowanie tekstu */
+        }
+        .btn {
+            position: relative;
+            background-color: #04AA6D;
+            border: none;
+            font-size: 28px;
+            color: #FFFFFF;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+            text-decoration: none;
+            overflow: hidden;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+        .btn:after {
+            content: "";
+            background: #90EE90;
+            display: block;
+            position: absolute;
+            padding-top: 2500%;
+            padding-left: 150%;
+            margin-left: -20px!important;
+            margin-top: -120%;
+            opacity: 0;
+            transition: all 0.8s;
+        }
+        .btn:hover:after {
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 0s;
         }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Contact Site</a>
+        <a class="navbar-brand" href="#">Głosowanie</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -49,10 +90,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Strona główna</a>
+                    <a class="nav-link" href="#">Main Page</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">O nas</a>
+                    <a class="nav-link" href="#">About Us</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'contact' %}">Contact <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
         </div>
@@ -62,18 +106,26 @@
         <div class="row">
             {% load static %}
             <div class="col-md-4">
-                <img src="{% static 'afroroger.jpg' %}" class="avatar" alt="Avatar 1">
+                <a href="https://github.com/tempestpulse" target="_blank">
+                    <img src="{% static 'afroroger.jpg' %}" class="avatar" alt="Avatar 1">
+                </a>
                 <a href="https://github.com/tempestpulse" class="btn btn-primary btn-lg btn-block" target="_blank">GitHub</a>
             </div>
             <div class="col-md-4">
-                <img src="{% static 'github_default.png' %}" class="avatar" alt="Avatar 2">
+                <a href="https://github.com/szel0" target="_blank">
+                    <img src="{% static 'github_default.png' %}" class="avatar" alt="Avatar 2">
+                </a>
                 <a href="https://github.com/szel0" class="btn btn-primary btn-lg btn-block" target="_blank">GitHub</a>
             </div>
             <div class="col-md-4">
-                <img src="{% static 'pakupek.jpg' %}" class="avatar" alt="Avatar 3">
+                <a href="https://github.com/pakupek" target="_blank">
+                    <img src="{%static 'pakupek.jpg' %}" class="avatar" alt="Avatar 3">
+                </a>
                 <a href="https://github.com/pakupek" class="btn btn-primary btn-lg btn-block" target="_blank">GitHub</a>
             </div>
         </div>
+        
+        <p>Skontaktuj się z nami również pod adresem email: example@example.com</p>
     </div>
 
     <footer>
