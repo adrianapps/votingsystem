@@ -15,11 +15,12 @@ class ElectionList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        elections = context['elections']
 
-        has_voted = [election.id for election in elections if Voter.objects.filter(
-            user=self.request.user, election=election, has_voted=True)]
-        context['has_voted'] = has_voted
+        if self.request.user.is_authenticated:
+            elections = context['elections']
+            has_voted = [election.id for election in elections if Voter.objects.filter(
+                user=self.request.user, election=election, has_voted=True)]
+            context['has_voted'] = has_voted
         return context
 
 
