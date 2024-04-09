@@ -47,7 +47,6 @@ def login_user(request):
             login(request, user)
             return redirect('election:election-list')
         else:
-            messages.success(request, ("There Was An Error Logging In, Try again..."))
-            return redirect('account/login.html')
-    else:
-        return render(request, 'account/login.html')
+            messages.error(request, "Invalid username or password. Please try again.")
+    # Jeśli nie jest to metoda POST lub uwierzytelnianie się nie powiodło, renderuj szablon logowania z błędem.
+    return render(request, 'account/login.html')

@@ -1,3 +1,4 @@
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
@@ -12,9 +13,16 @@
 </head>
 <body>
     <div class="wrapper">
-        <form method="POST">
+        <form method="POST" action="{% url 'account:login'%}">
             {% csrf_token %}
             <h1>Login</h1>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
             <div class="input-box">
                 <input type="text" placeholder="Username" name="username" required value="{{form.username}}">
                 <i class="bx bxs-user"></i>
@@ -27,7 +35,8 @@
                 <label><input type="checkbox">Remember me</label>
                 <a href="#">Forgot password?</a>
             </div>
-            <button type="submit" class="btn">Login</button>
+            <input type="submit" value="Login" class="btn">
+        
             <div class="register-link">
                 <p>Don't have an account?<a href="{% url 'account:register' %}">Register</a></p>
             </div>
@@ -35,3 +44,4 @@
     </div>
 </body>
 </html>
+{% endblock %}

@@ -18,6 +18,9 @@
             <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
             <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
             {% else %}
+            <li><a class="nav-link" href="{% url 'election:election-list' %}">Main Page</a></li>
+            <li><a class="nav-link" href="#">About Us</a></li>
+            <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
             <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
             {% endif %}
         </ul>
