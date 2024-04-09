@@ -15,7 +15,7 @@ body {
 .contact {
     position: relative;
     min-height: 100vh;
-    padding: 10px 100px;
+    padding: 20px 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,8 +43,7 @@ body {
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-top: 30px;
+    padding-top: 20px;
 }
 
 .container .contactInfo {
@@ -159,7 +158,10 @@ body {
         width: 100%;
     }
 }
-
+.content
+{
+    padding-top: 120px;
+}
 .avatar {
     width: 150px;
     height: 150px;
