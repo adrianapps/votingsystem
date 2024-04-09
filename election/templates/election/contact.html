@@ -1,3 +1,6 @@
+{% extends 'election/base.html' %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,231 +10,13 @@
     <title>Contact Us</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" 
     integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        /* Dodaj stylizację CSS tutaj */
-    
-        body, html{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Popprins', sans-serif;
-        }
-
-        .contact
-        {
-            position: relative;
-            min-height: 100vh;
-            padding: 50px 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            background: url({%static 'contact_us_2.jpg' %});
-        }
-
-        .contact .content
-        {
-            max-width: 800px;
-            text-align: center;
-        }
-
-        .contact .content h2
-        {
-            font-size: 36px;
-            font-weight: 500;
-            color: #fff;
-        }
-
-        .contact .content p
-        {
-            font-weight: 300;
-            color: #fff;
-        }
-
-        .container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 30px;
-        }
-
-        .container .contactInfo
-        {
-            width: 50%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .container .contactInfo .box
-        {
-            position: relative;
-            padding: 20px 0;
-            display: flex;
-        }
-
-        .container .contactInfo .box .icon
-        {
-            min-width: 60px;
-            height: 60px;
-            background: #fff;
-            display:flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            font-size: 22px;
-        }
-
-        .container .contactInfo .box .text
-        {
-            display: flex;
-            margin-left: 20px;
-            font-size: 16px;
-            color: #fff;
-            flex-direction: column;
-            font-weight: 300;
-        }
-
-        .container .contact.Info .box .text h3
-        {
-            font-weight: 500;
-            color: #00bcd4;
-        }
-
-        .contactForm
-        {
-            width: 40%;
-            padding: 40px;
-            background: #fff;
-        }
-
-        .contactForm h2
-        {
-            font-size: 30px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .contactForm .inputBox
-        {
-            position: relative;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .contactForm .inputBox input,
-        .contactForm .inputBox textarea
-        {
-            width: 100%;
-            padding: 5px 0;
-            font-size: 16px;
-            margin: 10px 0;
-            border: none;
-            border-bottom: 2px solid #333;
-            outline: none;
-            resize: none;
-        }
-
-        .contactForm .inputBox span
-        {
-            position: absolute;
-            left: 0;
-            padding: 5px 0;
-            font-size: 16px;
-            margin: 10px 0;
-            pointer-events: none;
-            transition: 05.s;
-            color: #666;
-        }
-
-        .contactForm .inputBox input:focus ~ span,
-        .contactForm .inputBox input:valid ~ span,
-        .contactForm .inputBox textarea:focus ~ span,
-        .contactForm .inputBox textarea:valid ~ span
-        {
-            color: #e91e63;
-            font-size: 12px;
-            transform: translateY(-20px);
-        }
-
-        .contactForm .inputBox input[type="submit"]
-        {
-            width: 100px;
-            background: #00bcd4;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            font-size: 18px;
-        }
-
-        @media (max-width: 991px)
-        {
-            .contact
-            {
-                padding: 50px;
-            }
-            .container
-            {
-                flex-direction: column;
-            }
-            .container .contactInfo
-            {
-                margin-bottom: 40px;
-            }
-            .container .contactInfo,
-            .contactForm
-            {
-                width: 100%;
-            }
-        }
-        /* Additional styles for content */
-        .list-group-item {
-            font-size: 1.2em; /* Adjust as needed */
-        }
-        /* Footer styles */
-        footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #333; /* Kolor tła stopki */
-            color: #fff; /* Kolor tekstu stopki */
-            padding: 3px 0; /* Wewnętrzny odstęp stopki */
-            text-align: center; /* Wyśrodkowanie tekstu */
-        }
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style2.css' %}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Głosowanie</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'election:election-list' %}">Main Page</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About Us</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'contact_view' %}">Contact <span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
-        </div>
-    </nav>
     <section class="contact">
         <div class="content">
             <h2>Contact Us</h2>
-            <p>Sposoby na kontak z nami</p>
+            <p>Sposoby na kontakt z nami</p>
         </div>
         <div class="container">
             <div class="contactInfo">
@@ -239,7 +24,7 @@
                     <div class="icon"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                     <div class="text">
                         <h3>Address</h3>
-                        <p>4671 Sugar Camp Road,<br>Owatonna,Minnesota,<br>55060</p>
+                        <p>4671 Sugar Camp Road,<br>Owatonna, Minnesota,<br>55060</p>
                     </div>
                 </div>
                 <div class="box">
@@ -282,36 +67,32 @@
 
     <div class="container text-center">
         <div class="row">
-            {% load static %}
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="https://github.com/tempestpulse" target="_blank">
-                    <img src="{% static 'afroroger.jpg' %}" class="avatar" alt="Avatar 1">
+                    <img src="{% static 'images/afroroger.jpg' %}" class="avatar" alt="Avatar 1">
                 </a>
-                <a href="https://github.com/tempestpulse" class="btn btn-primary btn-lg btn-block" target="_blank">GitHub</a>
+                <a href="https://github.com/tempestpulse" class="btn btn-primary btn-lg btn-block mt-3" target="_blank">GitHub</a>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="https://github.com/szel0" target="_blank">
-                    <img src="{% static 'github_default.png' %}" class="avatar" alt="Avatar 2">
+                    <img src="{% static 'images/github_default.png' %}" class="avatar" alt="Avatar 2">
                 </a>
-                <a href="https://github.com/szel0" class="btn btn-primary btn-lg btn-block" target="_blank">GitHub</a>
+                <a href="https://github.com/szel0" class="btn btn-primary btn-lg btn-block mt-3" target="_blank">GitHub</a>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="https://github.com/pakupek" target="_blank">
-                    <img src="{%static 'pakupek.jpg' %}" class="avatar" alt="Avatar 3">
+                    <img src="{% static 'images/pakupek.jpg' %}" class="avatar" alt="Avatar 3">
                 </a>
-                <a href="https://github.com/pakupek" class="btn btn-primary btn-lg btn-block" target="_blank">GitHub</a>
+                <a href="https://github.com/pakupek" class="btn btn-primary btn-lg btn-block mt-3" target="_blank">GitHub</a>
             </div>
         </div>
-        
         <p>Skontaktuj się z nami również pod adresem email: example@example.com</p>
     </div>
-
-    <footer>
-        <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
-    </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+{% endblock %}

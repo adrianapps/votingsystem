@@ -62,3 +62,9 @@ def vote(request, pk):
     messages.success(request, 'Your vote has been cast successfully')
     return redirect('election:election-list')
 
+<<<<<<< HEAD
+=======
+
+def contact_view(request):
+    return render(request, 'election/contact.html')
+>>>>>>> master
