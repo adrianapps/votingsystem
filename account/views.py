@@ -1,11 +1,11 @@
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout , authenticate
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import FormView
+from django.contrib import messages
 
 from account.forms import CustomUserCreationForm
-
 
 class CustomLoginView(LoginView):
     template_name = 'account/login.html'
@@ -37,3 +37,17 @@ class RegisterView(FormView):
 def logout_view(request):
     logout(request)
     return redirect('election:election-list')
+
+def login_user(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('election:election-list')
+        else:
+            messages.success(request, ("There Was An Error Logging In, Try again..."))
+            return redirect('account/login.html')
+    else:
+        return render(request, 'account/login.html')

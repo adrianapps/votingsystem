@@ -12,22 +12,13 @@
     <header>
         <a class="logo" href="#">LOGO</a>
         <ul>
+            {% if not request.user.is_authenticated %}
             <li><a class="nav-link" href="{% url 'election:election-list' %}">Main Page</a></li>
             <li><a class="nav-link" href="#">About Us</a></li>
             <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
-            <li><a class="nav-link" href="{% url 'account:login' %}">Login</a></li>
-            <li>
-                {% if request.user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
-            </li>
-                    
+            <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
             {% else %}
-            <li>
-                <a class="nav-link" href="{% url 'account:login' %}">Login</a>
-            </li>
-            <li>
-                <a class="nav-link" href="{% url 'account:register' %}">Register</a>
-            </li>
+            <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
             {% endif %}
         </ul>
     </header>
