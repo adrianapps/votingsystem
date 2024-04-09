@@ -25,7 +25,7 @@ class ElectionList(ListView):
         return context
 
 
-class ElectionDetail(DetailView, LoginRequiredMixin):
+class ElectionDetail(LoginRequiredMixin, DetailView):
     model = Election
     context_object_name = 'election'
 
