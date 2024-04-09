@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.shortcuts import render, get_object_or_404, redirect, reverse, redirect
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login
 
 from .models import Election, Candidate, Vote, Voter
 from .services import create_vote
@@ -65,3 +65,15 @@ def vote(request, pk):
 
 def contact_view(request):
     return render(request, 'election/contact.html')
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')  # Przekierowanie na stronę po zalogowaniu
+        else:
+            messages.error(request, 'Invalid username or password')
+    return render(request, 'election/login.html')  # Twój szablon HTML dla formularza logowania
