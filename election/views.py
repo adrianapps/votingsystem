@@ -67,3 +67,12 @@ def contact_view(request):
 
 def about_us_view(request):
     return render(request, 'election/about_us.html')
+
+#Widok dla zakladki profil user
+@login_required
+def profile_view(request):
+    # Pobierz aktualnie zalogowanego użytkownika
+    user = request.user
+    
+    # Przekazujemy użytkownika do szablonu HTML
+    return render(request, 'election/profile.html', {'user': user})
