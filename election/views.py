@@ -41,19 +41,21 @@ class ElectionDetail(LoginRequiredMixin, DetailView):
 @login_required
 def vote(request, pk):
     election = get_object_or_404(Election, pk=pk)
-
-    try:
-        voter = get_object_or_404(Voter, user=request.user, election=election)
-    except Voter.DoesNotExist:
-        raise Http404('You are not a voter')
+    voter = get_object_or_404(Voter, user=request.user, election=election)
 
     if voter.has_voted:
         raise Http404('You have already voted')
 
-    try:
-        selected_candidates = election.candidate_set.get(pk=request.POST['candidate'])
-    except (KeyError, Candidate.DoesNotExist):
-        messages.error(request, 'Invalid candidate selected')
+    selected_candidates_ids = request.POST.getlist('candidate')
+
+    if not selected_candidates_ids:
+        messages.error(request, 'No candidates selected')
+        return redirect(election.get_absolute_url())
+
+    selected_candidates = Candidate.objects.filter(pk__in=selected_candidates_ids)
+
+    if len(selected_candidates_ids) != len(selected_candidates):
+        messages.error(request, 'Candidate does not exist')
         return redirect(election.get_absolute_url())
 
     create_vote(election, selected_candidates, voter)
@@ -65,14 +67,16 @@ def vote(request, pk):
 def contact_view(request):
     return render(request, 'election/contact.html')
 
+
 def about_us_view(request):
     return render(request, 'election/about_us.html')
 
-#Widok dla zakladki profil user
+
+# Widok dla zakladki profil user
 @login_required
 def profile_view(request):
     # Pobierz aktualnie zalogowanego użytkownika
     user = request.user
-    
+
     # Przekazujemy użytkownika do szablonu HTML
     return render(request, 'election/profile.html', {'user': user})
