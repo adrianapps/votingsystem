@@ -64,3 +64,6 @@ def vote(request, pk):
 
 def contact_view(request):
     return render(request, 'election/contact.html')
+
+def about_us_view(request):
+    return render(request, 'election/about_us.html')
