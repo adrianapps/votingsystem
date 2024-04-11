@@ -3,7 +3,8 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, reverse, redirect
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Election, Candidate, Vote, Voter
 from .services import create_vote
@@ -24,7 +25,7 @@ class ElectionList(ListView):
         return context
 
 
-class ElectionDetail(DetailView):
+class ElectionDetail(LoginRequiredMixin, DetailView):
     model = Election
     context_object_name = 'election'
 
@@ -42,19 +43,21 @@ def contact_view(request):
 @login_required
 def vote(request, pk):
     election = get_object_or_404(Election, pk=pk)
-
-    try:
-        voter = get_object_or_404(Voter, user=request.user, election=election)
-    except Voter.DoesNotExist:
-        raise Http404('You are not a voter')
+    voter = get_object_or_404(Voter, user=request.user, election=election)
 
     if voter.has_voted:
         raise Http404('You have already voted')
 
-    try:
-        selected_candidates = election.candidate_set.get(pk=request.POST['candidate'])
-    except (KeyError, Candidate.DoesNotExist):
-        messages.error(request, 'Invalid candidate selected')
+    selected_candidates_ids = request.POST.getlist('candidate')
+
+    if not selected_candidates_ids:
+        messages.error(request, 'No candidates selected')
+        return redirect(election.get_absolute_url())
+
+    selected_candidates = Candidate.objects.filter(pk__in=selected_candidates_ids)
+
+    if len(selected_candidates_ids) != len(selected_candidates):
+        messages.error(request, 'Candidate does not exist')
         return redirect(election.get_absolute_url())
 
     create_vote(election, selected_candidates, voter)
@@ -66,14 +69,16 @@ def vote(request, pk):
 def contact_view(request):
     return render(request, 'election/contact.html')
 
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')  # Przekierowanie na stronę po zalogowaniu
-        else:
-            messages.error(request, 'Invalid username or password')
-    return render(request, 'election/login.html')  # Twój szablon HTML dla formularza logowania
+
+def about_us_view(request):
+    return render(request, 'election/about_us.html')
+
+
+# Widok dla zakladki profil user
+@login_required
+def profile_view(request):
+    # Pobierz aktualnie zalogowanego użytkownika
+    user = request.user
+
+    # Przekazujemy użytkownika do szablonu HTML
+    return render(request, 'election/profile.html', {'user': user})
