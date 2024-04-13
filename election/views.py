@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView
@@ -38,6 +39,20 @@ class ElectionDetail(LoginRequiredMixin, DetailView):
         return context
 
 
+class ElectionResult(LoginRequiredMixin, DetailView):
+    model = Election
+    context_object_name = 'election'
+    template_name = 'election/election_result.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        election = self.object
+        candidates = election.candidate_set.all()
+        context['candidates'] = candidates
+
+        return context
+
+
 @login_required
 def vote(request, pk):
     election = get_object_or_404(Election, pk=pk)
@@ -61,7 +76,7 @@ def vote(request, pk):
     create_vote(election, selected_candidates, voter)
 
     messages.success(request, 'Your vote has been cast successfully')
-    return redirect('election:election-list')
+    return redirect(election.get_result_url())
 
 
 def contact_view(request):

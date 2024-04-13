@@ -1,0 +1,8 @@
+<h1>{{ election.title }}</h1>
+{% if candidates %}
+    {% for candidate in candidates %}
+        <p>{{ candidate.name }} {{ candidate.vote_count }} votes</p>
+    {% endfor %}
+{% else %}
+  <p>No candidates available for this election.</p>
+{% endif %}

@@ -16,11 +16,11 @@ class Election(models.Model):
     def __str__(self):
         return self.title
 
-    def candidate_vote_count(self, candidate):
-        return self.vote_set.filter(chosen_candidates=candidate).count()
-
     def get_absolute_url(self):
         return reverse('election:election-detail', kwargs={'pk': self.pk})
+
+    def get_result_url(self):
+        return reverse('election:election-result', kwargs={'pk': self.pk})
 
 
 class Party(models.Model):
@@ -39,6 +39,9 @@ class Candidate(models.Model):
 
     def __str__(self):
         return self.name
+
+    def vote_count(self):
+        return self.votes.count()
 
 
 class Voter(models.Model):
