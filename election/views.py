@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Election, Candidate, Vote, Voter
 from .services import create_vote
+from .mixins import CandidateListMixin
 
 
 class ElectionList(ListView):
@@ -26,31 +27,15 @@ class ElectionList(ListView):
         return context
 
 
-class ElectionDetail(LoginRequiredMixin, DetailView):
+class ElectionDetail(LoginRequiredMixin, CandidateListMixin, DetailView):
     model = Election
     context_object_name = 'election'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        election = self.object
-        candidates = election.candidate_set.all()
-        context['candidates'] = candidates
 
-        return context
-
-
-class ElectionResult(LoginRequiredMixin, DetailView):
+class ElectionResult(LoginRequiredMixin, CandidateListMixin, DetailView):
     model = Election
     context_object_name = 'election'
     template_name = 'election/election_result.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        election = self.object
-        candidates = election.candidate_set.all()
-        context['candidates'] = candidates
-
-        return context
 
 
 @login_required
