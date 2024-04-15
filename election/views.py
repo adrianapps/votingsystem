@@ -37,6 +37,12 @@ class ElectionResult(LoginRequiredMixin, CandidateListMixin, DetailView):
     context_object_name = 'election'
     template_name = 'election/election_result.html'
 
+    def get(self, request, *args, **kwargs):
+        election = self.get_object()
+        if not election.voter_set.filter(election=election, user=request.user, has_voted=True).exists():
+            raise Http404("Unable to see results of this election. You are not a voter")
+        return super().get(request, *args, **kwargs)
+
 
 @login_required
 def vote(request, pk):
