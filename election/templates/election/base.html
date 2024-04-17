@@ -8,9 +8,13 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
+
+
+
 <body>
     <header>
         <a class="logo" href="{%url 'election:election-list' %}">LOGO</a>
+
         <ul>
             {% if not request.user.is_authenticated %}
             <li><a class="nav-link" href="{% url 'election:election-list' %}">Main Page</a></li>
@@ -23,15 +27,28 @@
             <li><a class="nav-link" href="{% url 'election:contact' %}">Contact</a></li>
             <li><a class="nav-link" href="{% url 'election:profile' %}">Proflie</a></li>
             <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+
+
             {% endif %}
         </ul>
     </header>
+
+
 
 {% block content %}
 {% endblock %}
 
 <footer>
     <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
 </footer>
 <script>
     window.addEventListener('scroll', function() {
