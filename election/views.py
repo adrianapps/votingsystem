@@ -1,10 +1,7 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
-from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
-from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Election, Candidate, Vote, Voter
@@ -40,7 +37,8 @@ class ElectionResult(LoginRequiredMixin, CandidateListMixin, DetailView):
     def get(self, request, *args, **kwargs):
         election = self.get_object()
         if not election.voter_set.filter(election=election, user=request.user, has_voted=True).exists():
-            raise Http404("Unable to see results of this election. You are not a voter")
+            messages.error(request, f"Unable to see the results. You are not a voter in {election.title}")
+            return redirect('election:election-list')
         return super().get(request, *args, **kwargs)
 
 
@@ -50,8 +48,8 @@ def vote(request, pk):
     voter = get_object_or_404(Voter, user=request.user, election=election)
 
     if voter.has_voted:
-        raise Http404('You have already voted')
-
+        messages.error(request, f'You have already voted in {election}')
+        return redirect('election:election-list')
     selected_candidates_ids = request.POST.getlist('candidate')
 
     if not selected_candidates_ids:
