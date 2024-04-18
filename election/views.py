@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 from .models import Election, Candidate, Vote, Voter
 from .services import create_vote
@@ -66,6 +67,27 @@ def vote(request, pk):
 
     messages.success(request, 'Your vote has been cast successfully')
     return redirect(election.get_result_url())
+
+
+class CandidateDetail(DetailView):
+    model = Candidate
+    context_object_name = 'candidate'
+
+
+class CandidateCreate(LoginRequiredMixin, CreateView):
+    model = Candidate
+    fields = '__all__'
+
+
+class CandidateUpdate(LoginRequiredMixin, UpdateView):
+    model = Candidate
+    context_object_name = 'candidate'
+    fields = '__all__'
+
+
+class CandidateDelete(LoginRequiredMixin, DeleteView):
+    model = Candidate
+    success_url = reverse_lazy('election:election-list')
 
 
 def contact_view(request):
