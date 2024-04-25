@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 
 from .models import Election, Candidate, Vote, Voter
 from .services import create_vote
-from .mixins import CandidateListMixin
+from .mixins import CandidateListMixin, StaffMemberRequiredMixin
 
 
 class ElectionList(ListView):
@@ -74,18 +74,18 @@ class CandidateDetail(DetailView):
     context_object_name = 'candidate'
 
 
-class CandidateCreate(LoginRequiredMixin, CreateView):
+class CandidateCreate(StaffMemberRequiredMixin, CreateView):
     model = Candidate
     fields = '__all__'
 
 
-class CandidateUpdate(LoginRequiredMixin, UpdateView):
+class CandidateUpdate(StaffMemberRequiredMixin, UpdateView):
     model = Candidate
     context_object_name = 'candidate'
     fields = '__all__'
 
 
-class CandidateDelete(LoginRequiredMixin, DeleteView):
+class CandidateDelete(StaffMemberRequiredMixin, DeleteView):
     model = Candidate
     success_url = reverse_lazy('election:election-list')
 

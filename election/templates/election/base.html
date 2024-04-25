@@ -19,12 +19,16 @@
             <li><a class="nav-link" href="{% url 'election:election-list' %}">Main Page</a></li>
             <li><a class="nav-link" href="{% url 'election:about_us_view' %}">About Us</a></li>
             <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
+
             {% if not request.user.is_authenticated %}
-            <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
+                <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
             {% else %}
-            <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
-            <li><a class="nav-link" href="{% url 'election:profile' %}">Proflie</a></li>
-            <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+                <li><a class="nav-link" href="{% url 'election:profile' %}">Proflie</a></li>
+                <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+            {% endif %}
+
+            {% if request.user.is_staff %}
+                <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
             {% endif %}
         </ul>
     </header>
