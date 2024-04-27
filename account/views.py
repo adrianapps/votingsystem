@@ -4,6 +4,9 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib import messages
+import urllib.request
+import json
+import urllib.parse
 
 from account.forms import CustomUserCreationForm
 
@@ -42,11 +45,32 @@ def login_user(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('election:election-list')
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        
+        # Weryfikacja reCAPTCHA po stronie serwera
+        if recaptcha_response:
+            data = urllib.parse.urlencode({
+                'secret': '6LdhNMkpAAAAAKoZPOLWvlHJxpCSXurkjwIacyhj',
+                'response': recaptcha_response
+            }).encode('utf-8')
+            req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read())
+
+            if result['success']:
+                # Jeśli reCAPTCHA została zweryfikowana, wykonaj autentykację użytkownika
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    return redirect('election:election-list')
+                else:
+                    messages.error(request, "Invalid username or password. Please try again.")
+            else:
+                # Jeśli reCAPTCHA nie została zweryfikowana, wyświetl błąd
+                messages.error(request, "Please complete the reCAPTCHA.")
         else:
-            messages.error(request, "Invalid username or password. Please try again.")
+            # Jeśli reCAPTCHA nie została przesłana, wyświetl błąd
+            messages.error(request, "Please complete the reCAPTCHA.")
+        
     # Jeśli nie jest to metoda POST lub uwierzytelnianie się nie powiodło, renderuj szablon logowania z błędem.
     return render(request, 'account/login.html')

@@ -10,6 +10,18 @@
     <title>Login page</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style3.css' %}">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        const form = document.querySelector("form");
+
+        form.addEventListener('submit', (e) => {
+            const recaptcha = document.querySelector('[name="g-recaptcha-response"]');
+            if (!recaptcha || recaptcha.value === '') {
+                e.preventDefault();
+                alert("Please complete the reCAPTCHA.");
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="wrapper">
@@ -36,11 +48,13 @@
                 <a href="#">Forgot password?</a>
             </div>
             <input type="submit" value="Login" class="btn">
-        
             <div class="register-link">
                 <p>Don't have an account?<a href="{% url 'account:register' %}">Register</a></p>
             </div>
+            <div class="g-recaptcha" data-sitekey="6LdhNMkpAAAAAOVheyvo2z4T4w-6KGs52sQ7Nry6" data-action="LOGIN"></div>
         </form>
+
+      
     </div>
 </body>
 </html>
