@@ -10,6 +10,7 @@ urlpatterns = [
     path('<int:pk>/', ElectionDetail.as_view(), name='election-detail'),
     path('<int:pk>/vote', views.vote, name='vote'),
     path('<int:pk>/result', ElectionResult.as_view(), name='election-result'),
+    path('<int:pk>/result/pdf', views.generate_pdf, name='generate-pdf'),
     path('candidate/<int:pk>', CandidateDetail.as_view(), name='candidate-detail'),
     path('candidate/<int:pk>/update', CandidateUpdate.as_view(), name='candidate-update'),
     path('candidate/<int:pk>/delete', CandidateDelete.as_view(), name='candidate-delete'),

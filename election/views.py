@@ -1,13 +1,22 @@
+import os
+import io
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.http import FileResponse
 
-from .models import Election, Candidate, Vote, Voter
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+
+from .models import Election, Candidate, Voter
 from .services import create_vote
 from .mixins import CandidateListMixin, StaffMemberRequiredMixin
+from .utils import generate_chart
 
 
 class ElectionList(ListView):
@@ -41,6 +50,44 @@ class ElectionResult(LoginRequiredMixin, CandidateListMixin, DetailView):
             messages.error(request, f"Unable to see the results. You are not a voter in {election.title}")
             return redirect('election:election-list')
         return super().get(request, *args, **kwargs)
+
+
+@login_required
+def generate_pdf(request, pk):
+    election = get_object_or_404(Election, pk=pk)
+    candidates = election.candidate_set.all()
+
+    if not election.voter_set.filter(election=election, user=request.user, has_voted=True).exists():
+        messages.error(request, f"Unable to see the results. You are not a voter in {election.title}")
+        return redirect('election:election-list')
+
+    candidate_names = []
+    candidate_votes = []
+
+    for candidate in candidates:
+        candidate_names.append(candidate.name)
+        candidate_votes.append(candidate.vote_count())
+
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
+    textob = c.beginText()
+    textob.setTextOrigin(inch, inch)
+    textob.setFont("Helvetica", 14)
+
+    for name, votes in zip(candidate_names, candidate_votes):
+        textob.textLine(f"{name} {votes} votes")
+    c.drawText(textob)
+
+    chart = generate_chart(candidate_names, candidate_votes)
+    c.scale(1, -1)
+    c.drawImage(chart, 100, -100, width=400, height=-300)
+
+    c.showPage()
+    c.save()
+    os.remove(chart)
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename='result.pdf')
 
 
 @login_required

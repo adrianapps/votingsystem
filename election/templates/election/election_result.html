@@ -5,6 +5,7 @@
     {% for candidate in candidates %}
         <p><a href="{{ candidate.get_absolute_url }}">{{ candidate.name }}</a> {{ candidate.vote_count }} votes</p>
     {% endfor %}
+    <a href="{% url 'election:generate-pdf' election.pk %}">Generate PDF</a>
 {% else %}
     <p>No candidates available for this election.</p>
 
