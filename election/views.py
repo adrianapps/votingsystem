@@ -2,8 +2,9 @@ import os
 import io
 
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail, EmailMessage
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -13,10 +14,12 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
+from votingsystem.settings import EMAIL_HOST_USER
 from .models import Election, Candidate, Voter
 from .services import create_vote
 from .mixins import CandidateListMixin, StaffMemberRequiredMixin
 from .utils import generate_chart
+from .forms import ContactForm
 
 
 class ElectionList(ListView):
@@ -137,8 +140,26 @@ class CandidateDelete(StaffMemberRequiredMixin, DeleteView):
     success_url = reverse_lazy('election:election-list')
 
 
-def contact_view(request):
-    return render(request, 'election/contact.html')
+class Contact(FormView):
+    template_name = 'election/contact.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('election:election-list')
+
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        email_from = form.cleaned_data['email']
+        content = form.cleaned_data['content']
+
+        email = EmailMessage(
+            subject=name,
+            body=content,
+            from_email=email_from,
+            to=[EMAIL_HOST_USER],
+            reply_to=[email_from],
+        )
+        email.send()
+        messages.success(self.request, f"{name}, your email has been sent successfully")
+        return super().form_valid(form)
 
 
 def about_us_view(request):
