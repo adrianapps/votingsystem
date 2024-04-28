@@ -4,9 +4,11 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib import messages
+from django.conf import settings
 import urllib.request
 import json
 import urllib.parse
+
 
 from account.forms import CustomUserCreationForm
 
@@ -50,7 +52,7 @@ def login_user(request):
         # Weryfikacja reCAPTCHA po stronie serwera
         if recaptcha_response:
             data = urllib.parse.urlencode({
-                'secret': '6LdhNMkpAAAAAKoZPOLWvlHJxpCSXurkjwIacyhj',
+                'secret': settings.CAPTCHA_PRIVATE_KEY,
                 'response': recaptcha_response
             }).encode('utf-8')
             req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
@@ -73,4 +75,4 @@ def login_user(request):
             messages.error(request, "Please complete the reCAPTCHA.")
         
     # Jeśli nie jest to metoda POST lub uwierzytelnianie się nie powiodło, renderuj szablon logowania z błędem.
-    return render(request, 'account/login.html')
+    return render(request, 'account/login.html', {'captcha_public_key': settings.CAPTCHA_PUBLIC_KEY})

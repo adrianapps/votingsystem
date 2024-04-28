@@ -15,6 +15,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG') == 'True'
+CAPTCHA_PUBLIC_KEY = os.getenv('CAPTCHA_PUBLIC_KEY')
+CAPTCHA_PRIVATE_KEY = os.getenv('CAPTCHA_PRIVATE_KEY')
 
 ALLOWED_HOSTS = []
 

@@ -51,7 +51,7 @@
             <div class="register-link">
                 <p>Don't have an account?<a href="{% url 'account:register' %}">Register</a></p>
             </div>
-            <div class="g-recaptcha" data-sitekey="6LdhNMkpAAAAAOVheyvo2z4T4w-6KGs52sQ7Nry6" data-action="LOGIN"></div>
+            <div class="g-recaptcha" data-sitekey="{{ captcha_public_key }}" data-action="LOGIN"></div>
         </form>
 
       
