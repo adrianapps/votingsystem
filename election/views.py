@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, reverse, redirect
@@ -5,9 +6,30 @@ from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
+=======
+import os
+import io
+>>>>>>> master
 
-from .models import Election, Candidate, Vote, Voter
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail, EmailMessage
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.http import FileResponse
+
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+
+from votingsystem.settings import EMAIL_HOST_USER
+from .models import Election, Candidate, Voter
 from .services import create_vote
+from .mixins import CandidateListMixin, StaffMemberRequiredMixin
+from .utils import generate_chart
+from .forms import ContactForm
 
 
 class ElectionList(ListView):
@@ -25,17 +47,60 @@ class ElectionList(ListView):
         return context
 
 
-class ElectionDetail(LoginRequiredMixin, DetailView):
+class ElectionDetail(LoginRequiredMixin, CandidateListMixin, DetailView):
     model = Election
     context_object_name = 'election'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        election = self.object
-        candidates = election.candidate_set.all()
-        context['candidates'] = candidates
 
-        return context
+class ElectionResult(LoginRequiredMixin, CandidateListMixin, DetailView):
+    model = Election
+    context_object_name = 'election'
+    template_name = 'election/election_result.html'
+
+    def get(self, request, *args, **kwargs):
+        election = self.get_object()
+        if not election.voter_set.filter(election=election, user=request.user, has_voted=True).exists():
+            messages.error(request, f"Unable to see the results. You are not a voter in {election.title}")
+            return redirect('election:election-list')
+        return super().get(request, *args, **kwargs)
+
+
+@login_required
+def generate_pdf(request, pk):
+    election = get_object_or_404(Election, pk=pk)
+    candidates = election.candidate_set.all()
+
+    if not election.voter_set.filter(election=election, user=request.user, has_voted=True).exists():
+        messages.error(request, f"Unable to see the results. You are not a voter in {election.title}")
+        return redirect('election:election-list')
+
+    candidate_names = []
+    candidate_votes = []
+
+    for candidate in candidates:
+        candidate_names.append(candidate.name)
+        candidate_votes.append(candidate.vote_count())
+
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
+    textob = c.beginText()
+    textob.setTextOrigin(inch, inch)
+    textob.setFont("Helvetica", 14)
+
+    for name, votes in zip(candidate_names, candidate_votes):
+        textob.textLine(f"{name} {votes} votes")
+    c.drawText(textob)
+
+    chart = generate_chart(candidate_names, candidate_votes)
+    c.scale(1, -1)
+    c.drawImage(chart, 100, -100, width=400, height=-300)
+
+    c.showPage()
+    c.save()
+    os.remove(chart)
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename='result.pdf')
 
 def contact_view(request):
     return render(request, 'election/contact.html')
@@ -46,8 +111,8 @@ def vote(request, pk):
     voter = get_object_or_404(Voter, user=request.user, election=election)
 
     if voter.has_voted:
-        raise Http404('You have already voted')
-
+        messages.error(request, f'You have already voted in {election}')
+        return redirect('election:election-list')
     selected_candidates_ids = request.POST.getlist('candidate')
 
     if not selected_candidates_ids:
@@ -63,11 +128,50 @@ def vote(request, pk):
     create_vote(election, selected_candidates, voter)
 
     messages.success(request, 'Your vote has been cast successfully')
-    return redirect('election:election-list')
+    return redirect(election.get_result_url())
 
 
-def contact_view(request):
-    return render(request, 'election/contact.html')
+class CandidateDetail(DetailView):
+    model = Candidate
+    context_object_name = 'candidate'
+
+
+class CandidateCreate(StaffMemberRequiredMixin, CreateView):
+    model = Candidate
+    fields = '__all__'
+
+
+class CandidateUpdate(StaffMemberRequiredMixin, UpdateView):
+    model = Candidate
+    context_object_name = 'candidate'
+    fields = '__all__'
+
+
+class CandidateDelete(StaffMemberRequiredMixin, DeleteView):
+    model = Candidate
+    success_url = reverse_lazy('election:election-list')
+
+
+class Contact(FormView):
+    template_name = 'election/contact.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('election:election-list')
+
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        email_from = form.cleaned_data['email']
+        content = form.cleaned_data['content']
+
+        email = EmailMessage(
+            subject=name,
+            body=content,
+            from_email=email_from,
+            to=[EMAIL_HOST_USER],
+            reply_to=[email_from],
+        )
+        email.send()
+        messages.success(self.request, f"{name}, your email has been sent successfully")
+        return super().form_valid(form)
 
 
 def about_us_view(request):

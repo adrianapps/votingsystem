@@ -43,6 +43,7 @@
                 </div>
             </div>
             <div class="contactForm">
+<<<<<<< HEAD
                 <form action="https://formsubmit.co/adam.akimowicz14@gmail.com" method="POST">
                     <h2>Send Message</h2>
                     <div class="inputBox">
@@ -56,6 +57,19 @@
                     <div class="inputBox">
                         <textarea name="message" required="required"></textarea>
                         <span>Type your message...</span>
+=======
+                <form method="post">
+                    {% csrf_token %}
+                    <h2>Send Message</h2>
+                    <div class="inputBox">
+                        {{ form.name }}
+                    </div>
+                    <div class="inputBox">
+                        {{ form.email }}
+                    </div>
+                    <div class="inputBox">
+                        {{ form.content }}
+>>>>>>> master
                     </div>
                     <div class="inputBox">
                         <input type="submit" name="" value="Send">

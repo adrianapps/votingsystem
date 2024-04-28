@@ -4,6 +4,8 @@ from django.http import Http404
 from django.shortcuts import reverse, get_object_or_404, redirect
 from django.db import models
 
+from PIL import Image
+
 
 class Election(models.Model):
     title = models.CharField(max_length=30)
@@ -16,11 +18,11 @@ class Election(models.Model):
     def __str__(self):
         return self.title
 
-    def candidate_vote_count(self, candidate):
-        return self.vote_set.filter(chosen_candidates=candidate).count()
-
     def get_absolute_url(self):
         return reverse('election:election-detail', kwargs={'pk': self.pk})
+
+    def get_result_url(self):
+        return reverse('election:election-result', kwargs={'pk': self.pk})
 
 
 class Party(models.Model):
@@ -33,12 +35,39 @@ class Party(models.Model):
 
 
 class Candidate(models.Model):
+    DEFAULT_PICTURE = 'pictures/default_pic.jpg'
+
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
+    picture = models.ImageField(default=DEFAULT_PICTURE, upload_to='pictures/', blank=True, null=True)
     party = models.ForeignKey(Party, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('election:candidate-detail', kwargs={'pk': self.pk})
+
+    def get_update_url(self):
+        return reverse('election:candidate-update', kwargs={'pk': self.pk})
+
+    def get_delete_url(self):
+        return reverse('election:candidate-delete', kwargs={'pk': self.pk})
+
+    def save(self, *args, **kwargs):
+        if not self.picture:
+            self.picture = self.DEFAULT_PICTURE
+
+        super(Candidate, self).save(*args, **kwargs)
+
+        picture = Image.open(self.picture.path)
+        if picture.height > 300 or picture.width > 300:
+            output_size = (300, 300)
+            picture.thumbnail(output_size)
+            picture.save(self.picture.path)
+
+    def vote_count(self):
+        return self.votes.count()
 
 
 class Voter(models.Model):

@@ -1,17 +1,14 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-
 <h1>{{ election.title }}</h1>
 {% if candidates %}
-    <form method="post" action="{% url 'election:vote' election.id %}">
-        {% csrf_token %}
-        {% for candidate in candidates %}
-            <input type="checkbox" name="candidate" value="{{ candidate.id }}"> {{ candidate.name }} <br>
-        {% endfor %}
-        <button type="submit">Vote</button>
-    </form>
+    {% for candidate in candidates %}
+        <p><a href="{{ candidate.get_absolute_url }}">{{ candidate.name }}</a> {{ candidate.vote_count }} votes</p>
+    {% endfor %}
+    <a href="{% url 'election:generate-pdf' election.pk %}">Generate PDF</a>
 {% else %}
     <p>No candidates available for this election.</p>
+
 {% endif %}
 
 {% if messages %}

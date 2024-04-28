@@ -26,6 +26,7 @@ body
     color: #fff;
     border-radius: 10px;
     padding: 30px 40px;
+    text-align: center;
 }
 
 .wrapper h1
@@ -127,8 +128,18 @@ body
 {
     text-decoration: underline;
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 
 =======
+}
+>>>>>>> master
+=======
+}
+
+.wrapper .g-recaptcha {
+    margin-top: 10px; /* Opcjonalnie, aby dodać odstęp między reCAPTCHA a innymi elementami */
+    display: flex;
+    justify-content: center;
 }
 >>>>>>> master
