@@ -6,6 +6,11 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: .2s linear;
 }
 
 body
@@ -147,7 +152,6 @@ header.sticky ul li a
 }
 
 
-
 .container {
     position: relative;
     padding-top: 20%; /* Adjust as needed */
@@ -247,4 +251,73 @@ footer {
 /* Additional styles for content */
 .list-group-item {
     font-size: 1.2em; /* Adjust as needed */
+}
+
+.wrapper
+{
+    margin-top: 300px;
+    padding: 15px 9%;
+    padding-bottom: 100px;
+}
+
+.wrapper .heading
+{
+    text-align: center;
+    padding-bottom: 15px;
+    color: #fff;
+    text-shadow: 0 5px 10px rgba(0,0,0,.2);
+    font-size: 50px;
+}
+
+.wrapper .box-container
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 15px;
+}
+
+.wrapper .box-container .box
+{
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    border-radius: 5px;
+    background: #fff;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+
+.wrapper .box-container .box h3
+{
+    color: #444;
+    font-size: 22px;
+    padding: 10px 0;
+}
+
+.wrapper .box-container .box p
+{
+    color: #777;
+    font-size: 25px;
+    line-height: 1.8;
+}
+
+.wrapper .box-container .box .btn
+{
+    margin-top: 10px;
+    display: inline-block;
+    background: #333;
+    color: #fff;
+    font-size: 17px;
+    border-radius: 5px;
+    padding: 8px 25px;
+}
+
+.wrapper .box-container .box .btn:hover
+{
+    letter-spacing: 1px;
+}
+
+.wrapper .box-container .box:hover
+{
+    box-shadow: 0 10px 15px rgba(0,0,0,.3);
+    transform: scale(1.03);
 }

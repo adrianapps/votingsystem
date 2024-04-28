@@ -1,16 +1,5 @@
-<<<<<<< HEAD
-from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect, reverse, redirect
-from django.views.generic import ListView, DetailView
-from django.contrib import messages
-from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
-=======
 import os
 import io
->>>>>>> master
-
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail, EmailMessage
 from django.shortcuts import render, get_object_or_404, redirect
@@ -177,6 +166,8 @@ class Contact(FormView):
 def about_us_view(request):
     return render(request, 'election/about_us.html')
 
+def homepage_view(request):
+    return render(request, 'election/homepage.html')
 
 # Widok dla zakladki profil user
 @login_required
