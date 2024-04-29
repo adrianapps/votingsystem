@@ -1,4 +1,4 @@
-from django.contrib.auth import login, logout , authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -9,16 +9,7 @@ import urllib.request
 import json
 import urllib.parse
 
-
 from account.forms import CustomUserCreationForm
-
-class CustomLoginView(LoginView):
-    template_name = 'account/login.html'
-    fields = '__all__'
-    redirect_authenticated_user = True
-
-    def get_success_url(self):
-        return reverse_lazy('election:election-list')
 
 
 class RegisterView(FormView):
@@ -43,12 +34,13 @@ def logout_view(request):
     logout(request)
     return redirect('election:election-list')
 
+
 def login_user(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
         recaptcha_response = request.POST.get('g-recaptcha-response')
-        
+
         # Weryfikacja reCAPTCHA po stronie serwera
         if recaptcha_response:
             data = urllib.parse.urlencode({
@@ -67,12 +59,15 @@ def login_user(request):
                     return redirect('election:election-list')
                 else:
                     messages.error(request, "Invalid username or password. Please try again.")
+                    return redirect('account:login')
             else:
                 # Jeśli reCAPTCHA nie została zweryfikowana, wyświetl błąd
                 messages.error(request, "Please complete the reCAPTCHA.")
+                return redirect('account:login')
         else:
             # Jeśli reCAPTCHA nie została przesłana, wyświetl błąd
             messages.error(request, "Please complete the reCAPTCHA.")
-        
+            return redirect('account:login')
+
     # Jeśli nie jest to metoda POST lub uwierzytelnianie się nie powiodło, renderuj szablon logowania z błędem.
     return render(request, 'account/login.html', {'captcha_public_key': settings.CAPTCHA_PUBLIC_KEY})
