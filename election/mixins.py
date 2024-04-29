@@ -1,6 +1,8 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import redirect
+
+from votingsystem.settings import LOGIN_URL
 
 
 class CandidateListMixin:
@@ -16,7 +18,7 @@ class CandidateListMixin:
 class StaffMemberRequiredMixin(UserPassesTestMixin):
     permission_denied_message = 'Unable to add candidates, you are not a staff member'
     redirect_field_name = 'election:election-list'
-    login_url = 'account:login'
+    login_url = LOGIN_URL
 
     def test_func(self):
         return self.request.user.is_staff
