@@ -1,0 +1,39 @@
+{% extends 'election/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="video-container">
+    <video autoplay loop muted>
+        <source src="{% static 'videos/paradise-sunset.3840x2160.mp4' %}" type="video/mp4">
+        <!-- Dodaj inne formaty wideo, jeśli to konieczne -->
+    </video>
+    <div class="overlay"></div> <!-- Dodaj przyciemnione tło -->
+</div>
+
+<div class="wrapper">
+    <div class="box-container">
+        <div class="box">
+            <i class="fa-solid fa-envelope-open-text" style="font-size: 70px;"></i>
+            <h3>How to Vote</h3>
+            <p>To be able to vote, you must have an account created and be logged in</p>
+            <a href="{% url 'account:login' %}" class="btn">Login</a>
+            <a href="{% url 'account:register' %}" class="btn">Register</a>
+        </div>
+        <div class="box">
+            <i class="fa-solid fa-list" style="font-size: 70px;"></i>
+            <h3>Election List</h3>
+            <p>List of currently available votes</p>
+            <a href="{% url 'election:election-list' %}" class="btn">Check List</a>
+        </div>
+        <div class="box">
+            <i class="fa-solid fa-magnifying-glass" style="font-size: 70px;"></i>
+            <h3>Search</h3>
+            <p>Search for vote</p>
+            <a href="#" class="btn">Search me</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
