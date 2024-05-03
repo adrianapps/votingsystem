@@ -6,24 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Voting</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="/static/css/home.css">
 </head>
 
 
-
 <body>
-    <header>
-        <a class="logo" href="{% url 'election:homepage' %}">LOGO</a>
+<header>
+    <a class="logo" href="{% url 'election:homepage' %}">LOGO</a>
 
-        <ul>
-            <li><a class="nav-link" href="{% url 'election:homepage' %}">Main Page</a></li>
-            <li><a class="nav-link" href="{% url 'election:about_us_view' %}">About Us</a></li>
-            <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
+    <ul>
+        <li><a class="nav-link" href="{% url 'election:homepage' %}">Main Page</a></li>
+        <li><a class="nav-link" href="{% url 'election:about_us_view' %}">About Us</a></li>
+        <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
 
             {% if not request.user.is_authenticated %}
                 <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
-            {% else %}
+                    {% else %}
                 <li><a class="nav-link" href="{% url 'election:profile' %}">Proflie</a></li>
                 <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
             {% endif %}
@@ -31,61 +32,65 @@
             {% if request.user.is_staff %}
                 <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
             {% endif %}
-        </ul>
-    </header>
+    </ul>
+</header>
 
-    <div class="video-container">
-        <video autoplay loop muted>
-            <source src="{% static 'videos/paradise-sunset.3840x2160.mp4' %}" type="video/mp4">
-            <!-- Dodaj inne formaty wideo, jeśli to konieczne -->
-        </video>
-        <div class="overlay"></div> <!-- Dodaj przyciemnione tło -->
-    </div>
-    
-    <div class="wrapper">
-        <div class="box-container">
-            <div class="box">
-                <i class="fa-solid fa-envelope-open-text" style="font-size: 70px;"></i>
-                <h3>How to Vote</h3>
-                <p>To be able to vote, you must have an account created and be logged in</p>
-                <a href="{% url 'account:login' %}" class="btn">Login</a>
-                <a href="{% url 'account:register' %}" class="btn">Register</a>
-            </div>
-            <div class="box">
-                <i class="fa-solid fa-list" style="font-size: 70px;"></i>
-                <h3>Election List</h3>
-                <p>List of currently available votes</p>
-                <a href="{% url 'election:election-list' %}" class="btn">Check List</a>
-            </div>
-            <div class="box">
-                <i class="fa-solid fa-magnifying-glass" style="font-size: 70px;"></i>
-                <h3>Search</h3>
-                <p>Search for vote</p>
-                <a href="#" class="btn">Search me</a>
-            </div>
+<div class="video-container">
+    <video autoplay loop muted>
+        <source src="{% static 'videos/paradise-sunset.3840x2160.mp4' %}" type="video/mp4">
+        <!-- Dodaj inne formaty wideo, jeśli to konieczne -->
+    </video>
+    <div class="overlay"></div> <!-- Dodaj przyciemnione tło -->
+</div>
+
+<div class="wrapper">
+    <div class="box-container">
+        <div class="box">
+            <i class="fa-solid fa-envelope-open-text" style="font-size: 70px;"></i>
+            <h3>How to Vote</h3>
+            <p>To be able to vote, you must have an account created and be logged in</p>
+            <a href="{% url 'account:login' %}" class="btn">Login</a>
+            <a href="{% url 'account:register' %}" class="btn">Register</a>
+        </div>
+        <div class="box">
+            <i class="fa-solid fa-list" style="font-size: 70px;"></i>
+            <h3>Election List</h3>
+            <p>List of currently available votes</p>
+            <a href="{% url 'election:election-list' %}" class="btn">Check List</a>
+        </div>
+        <div class="box">
+            <i class="fa-solid fa-magnifying-glass" style="font-size: 70px;"></i>
+            <h3>Search For Elections</h3>
+            <nav class="navbar navbar-light bg-light">
+                <form class="form-inline" action="{% url 'election:search' %}">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                    <button class="btn" type="submit">Search</button>
+                </form>
+            </nav>
         </div>
     </div>
+</div>
 
-    <footer>
-        <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
+<footer>
+    <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
 
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-    </footer>
-    <script>
-        window.addEventListener('scroll', function() {
-            var header = document.querySelector("header");
-            header.classList.toggle("sticky", window.scrollY > 0);
-        })
-    </script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</footer>
+<script>
+    window.addEventListener('scroll', function () {
+        var header = document.querySelector("header");
+        header.classList.toggle("sticky", window.scrollY > 0);
+    })
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
