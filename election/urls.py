@@ -8,6 +8,7 @@ app_name = 'election'
 urlpatterns = [
     path('', views.homepage_view, name="homepage"),
     path('elections', ElectionList.as_view(), name='election-list'),
+    path('elections/search/', views.search, name='search'),
     path('election/<int:pk>/', ElectionDetail.as_view(), name='election-detail'),
     path('election/<int:pk>/vote', views.vote, name='vote'),
     path('election/<int:pk>/voter', views.signup_for_election, name='voter-create'),

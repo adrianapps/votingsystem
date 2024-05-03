@@ -3,6 +3,7 @@ import io
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail, EmailMessage
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.contrib import messages
@@ -189,6 +190,20 @@ def about_us_view(request):
 def homepage_view(request):
     return render(request, 'election/homepage.html')
 
+
+def search(request):
+    query = request.GET.get('q', None)
+    elections = Election.objects.all()
+    if query is not None:
+        elections = elections.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+    context = {
+        'elections': elections,
+        'query': query
+    }
+    return render(request, 'election/search.html', context)
 
 # Widok dla zakladki profil user
 @login_required
