@@ -1,10 +1,5 @@
 /* Dodaj stylizację CSS tutaj */
-body, html {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Popprins', sans-serif;
-}
+
 
 /* Ustawienie tła dla całej strony */
 body {
