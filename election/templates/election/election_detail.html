@@ -1,7 +1,7 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
 
-<h1>{{ election.title }}</h1>
+<h1>{{ election.title }} <a href="{% url 'election:voter-create' election.id %}">Signup For Voting</a></h1>
 {% if candidates %}
     <form method="post" action="{% url 'election:vote' election.id %}">
         {% csrf_token %}
