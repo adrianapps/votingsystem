@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.shortcuts import reverse, get_object_or_404, redirect
 from django.db import models
+from django.utils import timezone
 
 from PIL import Image
 
@@ -77,6 +78,10 @@ class Voter(models.Model):
 
     def __str__(self):
         return f"{self.user} can vote in {self.election}"
+
+    def clean(self):
+        if timezone.now() > self.election.start_date:
+            raise ValidationError(f"You can't sign up for {self.election.title}, the election has already started")
 
 
 class Vote(models.Model):
