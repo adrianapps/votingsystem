@@ -1,6 +1,5 @@
 import os
 import io
-
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail, EmailMessage
 from django.shortcuts import render, get_object_or_404, redirect
@@ -92,6 +91,8 @@ def generate_pdf(request, pk):
 
     return FileResponse(buf, as_attachment=True, filename='result.pdf')
 
+def contact_view(request):
+    return render(request, 'election/contact.html')
 
 @login_required
 def vote(request, pk):
@@ -165,6 +166,8 @@ class Contact(FormView):
 def about_us_view(request):
     return render(request, 'election/about_us.html')
 
+def homepage_view(request):
+    return render(request, 'election/homepage.html')
 
 # Widok dla zakladki profil user
 @login_required
