@@ -15,19 +15,19 @@
             <h1>Registration</h1>
             <div class="input-box">
                 <div class="input-field">
-                    <input type="text" placeholder="Username" required>
+                    {{ form.username }}
                     <i class="bx bxs-user"></i>
                 </div>
                 <div class="input-field">
-                    <input type="text" placeholder="E-mail" required>
+                    {{ form.email }}
                     <i class="bx bxs-envelope"></i>
                 </div>
                 <div class="input-field">
-                    <input type="password" placeholder="Password" required>
+                    {{ form.password1 }}
                     <i class="bx bxs-lock-alt"></i>
                 </div>
                 <div class="input-field">
-                    <input type="password" placeholder="Confirm password" required>
+                    {{ form.password2 }}
                     <i class="bx bxs-lock-alt"></i>
                 </div>
                 <button type="submit" class="btn">Register</button>
