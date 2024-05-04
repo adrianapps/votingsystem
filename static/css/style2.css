@@ -1,7 +1,3 @@
-/* Dodaj stylizację CSS tutaj */
-
-
-/* Ustawienie tła dla całej strony */
 body {
     background: url('/static/images/contact-us-scaled-1.jpg') fixed; /* Obrazek będzie przewijać się razem ze stroną */
     background-size: cover; /* Dopasowanie rozmiaru obrazka do kontenera */

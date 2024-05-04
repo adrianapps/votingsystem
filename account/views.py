@@ -16,7 +16,7 @@ class RegisterView(FormView):
     template_name = 'account/register.html'
     form_class = CustomUserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('election:election-list')
+    success_url = reverse_lazy('election:homepage')
 
     def form_valid(self, form):
         user = form.save()
@@ -26,13 +26,13 @@ class RegisterView(FormView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('election:election-list')
+            return redirect('election:homepage')
         return super(RegisterView, self).get(*args, **kwargs)
 
 
 def logout_view(request):
     logout(request)
-    return redirect('election:election-list')
+    return redirect('election/homepage.html')
 
 
 def login_user(request):
@@ -56,7 +56,7 @@ def login_user(request):
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
                     login(request, user)
-                    return redirect('election:election-list')
+                    return redirect('homepage.html')
                 else:
                     messages.error(request, "Invalid username or password. Please try again.")
                     return redirect('account:login')
