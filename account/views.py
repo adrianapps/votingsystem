@@ -32,7 +32,7 @@ class RegisterView(FormView):
 
 def logout_view(request):
     logout(request)
-    return redirect('election/homepage.html')
+    return redirect('election:homepage')
 
 
 def login_user(request):
@@ -56,7 +56,7 @@ def login_user(request):
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
                     login(request, user)
-                    return redirect('homepage.html')
+                    return redirect('election:homepage')
                 else:
                     messages.error(request, "Invalid username or password. Please try again.")
                     return redirect('account:login')
