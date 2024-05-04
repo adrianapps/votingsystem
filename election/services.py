@@ -18,3 +18,15 @@ def create_vote(election, selected_candidates, voter):
     voter.has_voted = True
     voter.save()
     return vote
+
+
+def create_voter(election, user):
+    if Voter.objects.filter(election=election, user=user).exists():
+        raise ValidationError(f"You have already signed up for {election.title}")
+
+    try:
+        voter = Voter.objects.create(election=election, user=user)
+        voter.full_clean()
+        return voter
+    except ValidationError as e:
+        raise e

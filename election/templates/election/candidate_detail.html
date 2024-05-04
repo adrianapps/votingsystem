@@ -1,4 +1,6 @@
 {{ candidate.name }}
-<a href="{{ candidate.get_delete_url }}">Delete</a>
-<a href="{{ candidate.get_update_url }}">Update</a>
+{% if request.user.is_staff %}
+    <a href="{{ candidate.get_delete_url }}">Delete</a>
+    <a href="{{ candidate.get_update_url }}">Update</a>
+{% endif %}
 <img src="{{ candidate.picture.url }}" alt="">

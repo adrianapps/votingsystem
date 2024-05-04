@@ -1,0 +1,35 @@
+{% extends 'election/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="video-container">
+    <video autoplay loop muted>
+        <source src="{% static 'videos/background_video.mp4' %}" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+</div>
+
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="jumbotron mt-5">
+                <h1 class="display-4 text-center mb-5">Result for {{ query }}</h1>
+                <div class="list-group">
+                    {% for election in elections %}
+                        <a href="{% url 'election:election-detail' election.id %}" class="list-group-item list-group-item-action">
+                            {{ election.title }}
+                            {% if election.pk in has_voted %}
+                                <span class="badge badge-success ml-2">Voted</span>
+                            {% endif %}
+                        </a>
+                    {% empty %}
+                        <p class="text-center">No elections available.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

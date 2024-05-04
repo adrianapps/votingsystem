@@ -2,6 +2,8 @@ import os
 import io
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail, EmailMessage
+from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.contrib import messages
@@ -15,7 +17,7 @@ from reportlab.lib.pagesizes import letter
 
 from votingsystem.settings import EMAIL_HOST_USER
 from .models import Election, Candidate, Voter
-from .services import create_vote
+from .services import create_vote, create_voter
 from .mixins import CandidateListMixin, StaffMemberRequiredMixin
 from .utils import generate_chart
 from .forms import ContactForm
@@ -39,6 +41,12 @@ class ElectionList(ListView):
 class ElectionDetail(LoginRequiredMixin, CandidateListMixin, DetailView):
     model = Election
     context_object_name = 'election'
+
+    def dispatch(self, request, *args, **kwargs):
+        election = self.get_object()
+        if Voter.objects.filter(election=election, user=request.user, has_voted=True).exists():
+            return redirect(election.get_result_url())
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ElectionResult(LoginRequiredMixin, CandidateListMixin, DetailView):
@@ -91,8 +99,20 @@ def generate_pdf(request, pk):
 
     return FileResponse(buf, as_attachment=True, filename='result.pdf')
 
+
 def contact_view(request):
     return render(request, 'election/contact.html')
+
+
+def signup_for_election(request, pk):
+    election = get_object_or_404(Election, pk=pk)
+    try:
+        create_voter(election, request.user)
+        messages.success(request, f"You have successfully signed up for {election.title}")
+    except ValidationError as e:
+        messages.error(request, str(e))
+    return redirect('election:election-list')
+
 
 @login_required
 def vote(request, pk):
@@ -166,8 +186,24 @@ class Contact(FormView):
 def about_us_view(request):
     return render(request, 'election/about_us.html')
 
+
 def homepage_view(request):
     return render(request, 'election/homepage.html')
+
+
+def search(request):
+    query = request.GET.get('q', None)
+    elections = Election.objects.all()
+    if query is not None:
+        elections = elections.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+    context = {
+        'elections': elections,
+        'query': query
+    }
+    return render(request, 'election/search.html', context)
 
 # Widok dla zakladki profil user
 @login_required
