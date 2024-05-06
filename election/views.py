@@ -1,7 +1,7 @@
 import os
 import io
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMessage
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.http import FileResponse
+from django.http import FileResponse, Http404
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
@@ -43,6 +43,8 @@ class ElectionDetail(LoginRequiredMixin, CandidateListMixin, DetailView):
     context_object_name = 'election'
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
         election = self.get_object()
         if Voter.objects.filter(election=election, user=request.user, has_voted=True).exists():
             return redirect(election.get_result_url())
@@ -116,8 +118,12 @@ def signup_for_election(request, pk):
 
 @login_required
 def vote(request, pk):
-    election = get_object_or_404(Election, pk=pk)
-    voter = get_object_or_404(Voter, user=request.user, election=election)
+    try:
+        election = get_object_or_404(Election, pk=pk)
+        voter = get_object_or_404(Voter, user=request.user, election=election)
+    except Http404:
+        messages.error(request, 'You are not a voter, or election does not exist')
+        return redirect('election:election-list')
 
     if voter.has_voted:
         messages.error(request, f'You have already voted in {election}')
