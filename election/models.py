@@ -9,8 +9,11 @@ from PIL import Image
 
 
 class Election(models.Model):
+    DEFAULT_IMAGE = 'pictures/default_election.jpg'
+
     title = models.CharField(max_length=30)
     description = models.TextField(max_length=500, blank=True)
+    image = models.ImageField(default=DEFAULT_IMAGE, upload_to='pictures/', blank=True, null=True)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     max_candidates_choice = models.PositiveIntegerField(default=1)
@@ -18,6 +21,11 @@ class Election(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.image:
+            self.image = self.DEFAULT_IMAGE
+        super(Election, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('election:election-detail', kwargs={'pk': self.pk})
