@@ -149,7 +149,7 @@ header.sticky ul li a
 
 .container {
     position: relative;
-    padding-top: 20%; /* Adjust as needed */
+    
     margin: auto; /* Centrowanie kontenera */
     max-width: 800px; /* Maksymalna szerokość kontenera */
     overflow-y: hidden; /* Dodanie pionowego paska przewijania do kontenera */
@@ -172,13 +172,14 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #333; /* Kolor tła stopki */
+    background-color:rgba(0, 0, 0, .2); /* Kolor tła stopki */
     color: #fff; /* Kolor tekstu stopki */
     padding: 3px 0; /* Wewnętrzny odstęp stopki */
     text-align: center; /* Wyśrodkowanie tekstu */
     display: relative;
     justify-content: space-between;
     align-items: center;
+    backdrop-filter: blur(20px);
 }
 .btn {
     position: relative;
