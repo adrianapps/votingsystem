@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
-from .models import Vote, Voter
+from .models import Vote, Voter, Election
 
 
 def create_vote(election, selected_candidates, voter):
@@ -20,8 +21,12 @@ def create_vote(election, selected_candidates, voter):
     return vote
 
 
+def is_voter(election, user):
+    return Voter.objects.filter(election=election, user=user)
+
+
 def create_voter(election, user):
-    if Voter.objects.filter(election=election, user=user).exists():
+    if is_voter(election, user):
         raise ValidationError(f"You have already signed up for {election.title}")
 
     try:
@@ -30,3 +35,13 @@ def create_voter(election, user):
         return voter
     except ValidationError as e:
         raise e
+
+
+def get_active_elections():
+    now = timezone.now()
+    return Election.objects.filter(start_date__lte=now, end_date__gt=now)
+
+
+def get_finished_elections():
+    now = timezone.now()
+    return Election.objects.filter(end_date__lte=now)
