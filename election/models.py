@@ -30,8 +30,17 @@ class Election(models.Model):
     def get_absolute_url(self):
         return reverse('election:election-detail', kwargs={'pk': self.pk})
 
+    def get_update_url(self):
+        return reverse('election:election-update', kwargs={'pk': self.pk})
+
+    def get_delete_url(self):
+        return reverse('election:election-delete', kwargs={'pk': self.pk})
+
     def get_result_url(self):
         return reverse('election:election-result', kwargs={'pk': self.pk})
+
+    def has_finished(self):
+        return self.end_date <= timezone.now()
 
 
 class Party(models.Model):
