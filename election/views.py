@@ -5,6 +5,7 @@ from django.core.mail import EmailMessage
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -17,7 +18,7 @@ from reportlab.lib.pagesizes import letter
 
 from votingsystem.settings import EMAIL_HOST_USER
 from .models import Election, Candidate, Voter
-from .services import create_vote, create_voter
+from .services import create_vote, create_voter, is_voter
 from .mixins import CandidateListMixin, StaffMemberRequiredMixin
 from .utils import generate_chart
 from .forms import ContactForm
@@ -42,13 +43,17 @@ class ElectionDetail(LoginRequiredMixin, CandidateListMixin, DetailView):
     model = Election
     context_object_name = 'election'
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
+    def get(self, request, *args, **kwargs):
         election = self.get_object()
-        if Voter.objects.filter(election=election, user=request.user, has_voted=True).exists():
+        if election.has_finished():
             return redirect(election.get_result_url())
-        return super().dispatch(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        election = self.object
+        context['is_voter'] = is_voter(election, self.request.user)
+        return context
 
 
 class ElectionResult(LoginRequiredMixin, CandidateListMixin, DetailView):
@@ -58,20 +63,36 @@ class ElectionResult(LoginRequiredMixin, CandidateListMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         election = self.get_object()
-        if not election.voter_set.filter(election=election, user=request.user, has_voted=True).exists():
-            messages.error(request, f"Unable to see the results. You are not a voter in {election.title}")
+        if not election.has_finished():
+            messages.error(request, f"You can't see the results of {election.title}, it hasn't finished yet")
             return redirect('election:election-list')
         return super().get(request, *args, **kwargs)
+
+
+class ElectionCreate(StaffMemberRequiredMixin, CreateView):
+    model = Election
+    fields = '__all__'
+
+
+class ElectionUpdate(StaffMemberRequiredMixin, UpdateView):
+    model = Election
+    context_object_name = 'election'
+    fields = '__all__'
+
+
+class ElectionDelete(StaffMemberRequiredMixin, DeleteView):
+    model = Election
+    success_url = reverse_lazy('election:election-list')
 
 
 @login_required
 def generate_pdf(request, pk):
     election = get_object_or_404(Election, pk=pk)
-    candidates = election.candidate_set.all()
-
-    if not election.voter_set.filter(election=election, user=request.user, has_voted=True).exists():
-        messages.error(request, f"Unable to see the results. You are not a voter in {election.title}")
+    if not election.has_finished():
+        messages.error(request, f"You can't see the results of {election.title}, it hasn't finished yet")
         return redirect('election:election-list')
+
+    candidates = election.candidate_set.all()
 
     candidate_names = []
     candidate_votes = []
@@ -118,9 +139,10 @@ def signup_for_election(request, pk):
 
 @login_required
 def vote(request, pk):
+    user = request.user
     try:
         election = get_object_or_404(Election, pk=pk)
-        voter = get_object_or_404(Voter, user=request.user, election=election)
+        voter = get_object_or_404(Voter, user=user, election=election)
     except Http404:
         messages.error(request, 'You are not a voter, or election does not exist')
         return redirect('election:election-list')
@@ -141,6 +163,15 @@ def vote(request, pk):
         return redirect(election.get_absolute_url())
 
     create_vote(election, selected_candidates, voter)
+
+    email = EmailMessage(
+        subject=user.username,
+        body=f"Thank you for voting in {election.title}",
+        from_email=EMAIL_HOST_USER,
+        to=[user.email],
+        reply_to=[EMAIL_HOST_USER],
+    )
+    email.send()
 
     messages.success(request, 'Your vote has been cast successfully')
     return redirect(election.get_result_url())
@@ -210,6 +241,7 @@ def search(request):
         'query': query
     }
     return render(request, 'election/search.html', context)
+
 
 # Widok dla zakladki profil user
 @login_required
