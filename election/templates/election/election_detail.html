@@ -29,11 +29,12 @@
     
                 {% if request.user.is_staff %}
                     <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
+                    <li><a class="nav-link" href="{% url 'election:election-create' %}">Add Election</a></li>
                 {% endif %}
             </ul>
         </header>
         <h1>{{ election.title }} 
-            {% if not request.user.is_authenticated %}
+            {% if not is_voter %}
             <a href="{% url 'election:voter-create' election.id %}">Signup For Voting</a></h1>
             {% endif %}
         {% if candidates %}
@@ -58,13 +59,7 @@
         <footer>
             <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
         
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+
         
         </footer>
 

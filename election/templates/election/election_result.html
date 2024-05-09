@@ -1,6 +1,11 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
 <h1>{{ election.title }}</h1>
+{% if request.user.is_staff %}
+    <a href="{{ election.get_update_url }}">Update</a>
+    <a href="{{ election.get_delete_url }}">Delete</a>
+{% endif %}
+
 {% if candidates %}
     {% for candidate in candidates %}
         <p><a href="{{ candidate.get_absolute_url }}">{{ candidate.name }}</a> {{ candidate.vote_count }} votes</p>
