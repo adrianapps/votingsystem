@@ -1,3 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/candidate.css' %}">
+        <style>
+            body{
+                background: url({{candidate.picture.url}}) center fixed;
+                backdrop-filter: blur(7px);
+                background-size: cover;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <a class="logo" href="{% url 'election:homepage' %}">LOGO</a>
+            <ul>
+                <li><a class="nav-link" href="{% url 'election:homepage' %}">Main Page</a></li>
+                <li><a class="nav-link" href="{% url 'election:about_us_view' %}">About Us</a></li>
+                <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
+    
+                    {% if not request.user.is_authenticated %}
+                        <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
+                            {% else %}
+                        <li><a class="nav-link" href="{% url 'election:profile' %}">Proflie</a></li>
+                        <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+                    {% endif %}
+    
+                    {% if request.user.is_staff %}
+                        <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
+                    {% endif %}
+            </ul>
+        </header>
+        <section class="section">
+            <div class="section__container">
+                <div class="content">
+                    <p class="subtitle">{{ candidate.party }}</p>
+                    <h1 class="title">I'm<span>{{ candidate.name }}</span></h1>
+                    <p class="description">
+                        Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Mauris Nunc Arcu, 
+                        Dignissim Sit Amet Sollicitudin Iaculis, Vehicula Id Urna. Sed Luctus Urna Nunc. 
+                        Donec Fermentum, Magna Sit Amet Rutrum Pretium, Turpis Dolor Molestie Diam, Ut Lacinia Diam Risus Eleifend 
+                        Sapien. Curabitur Ac Nibh Nulla. Maecenas Nec Augue Placerat, Viverra Tellus Non, Pulvinar Risus.
+                    </p>
+                    <div class="action__btns">
+                        <button class="delete__me">Delete</button>
+                        <button class="update__me">Update</button>
+                    </div>
+                </div>
+                <div class="image">
+                    <img src="{{ candidate.picture.url }}"alt="profile">
+                </div>
+            </div>
+        </section>
+        <footer>
+            <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
+    
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+    
+        </footer>
+    </body>
+    <script>
+        window.addEventListener('scroll', function () {
+            var header = document.querySelector("header");
+            header.classList.toggle("sticky", window.scrollY > 0);
+        })
+    </script>
+</html>
+
+
 {{ candidate.name }}
 {% if request.user.is_staff %}
     <a href="{{ candidate.get_delete_url }}">Delete</a>
