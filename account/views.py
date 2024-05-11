@@ -1,4 +1,5 @@
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -71,3 +72,13 @@ def login_user(request):
 
     # Jeśli nie jest to metoda POST lub uwierzytelnianie się nie powiodło, renderuj szablon logowania z błędem.
     return render(request, 'account/login.html', {'captcha_public_key': settings.CAPTCHA_PUBLIC_KEY})
+
+
+# Widok dla zakladki profil user
+@login_required
+def profile_view(request):
+    # Pobierz aktualnie zalogowanego użytkownika
+    user = request.user
+
+    # Przekazujemy użytkownika do szablonu HTML
+    return render(request, 'account/profile.html', {'user': user})

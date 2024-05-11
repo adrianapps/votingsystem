@@ -24,5 +24,4 @@ urlpatterns = [
     path('candidate/add', CandidateCreate.as_view(), name='candidate-create'),
     path('contact/', Contact.as_view(), name='contact'),
     path('about_us/', views.about_us_view, name='about_us_view'),
-    path('profile/', views.profile_view, name="profile"),
 ]
