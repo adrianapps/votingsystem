@@ -162,7 +162,11 @@ def vote(request, pk):
         messages.error(request, 'Candidate does not exist')
         return redirect(election.get_absolute_url())
 
-    create_vote(election, selected_candidates, voter)
+    try:
+        create_vote(election, selected_candidates, voter)
+    except ValidationError as e:
+        messages.error(request, str(e))
+        return redirect('election:election-list')
 
     email = EmailMessage(
         subject=user.username,
@@ -241,13 +245,3 @@ def search(request):
         'query': query
     }
     return render(request, 'election/search.html', context)
-
-
-# Widok dla zakladki profil user
-@login_required
-def profile_view(request):
-    # Pobierz aktualnie zalogowanego użytkownika
-    user = request.user
-
-    # Przekazujemy użytkownika do szablonu HTML
-    return render(request, 'election/profile.html', {'user': user})
