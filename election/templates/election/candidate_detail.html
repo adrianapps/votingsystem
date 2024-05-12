@@ -9,8 +9,8 @@
         <link rel="stylesheet" href="{% static 'css/candidate.css' %}">
         <style>
             body{
-                background: url({{candidate.picture.url}}) center fixed;
-                backdrop-filter: blur(7px);
+                background: url("/media/pictures/glowing_4K.jpg") center fixed;
+                
                 background-size: cover;
             }
         </style>
@@ -68,13 +68,14 @@
             {% endif %}
     
         </footer>
+    
+        <script>
+            window.addEventListener('scroll', function () {
+                var header = document.querySelector("header");
+                header.classList.toggle("sticky", window.scrollY > 0);
+            })
+        </script>
     </body>
-    <script>
-        window.addEventListener('scroll', function () {
-            var header = document.querySelector("header");
-            header.classList.toggle("sticky", window.scrollY > 0);
-        })
-    </script>
 </html>
 
 
