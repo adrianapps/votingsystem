@@ -12,7 +12,7 @@ def create_vote(election, selected_candidates, voter):
         vote.full_clean()
     except ValidationError as e:
         vote.delete()
-        raise ValidationError('Vote creation failed') from e
+        raise e
 
     vote.save()
 

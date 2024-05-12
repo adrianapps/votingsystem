@@ -1,4 +1,5 @@
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -10,6 +11,7 @@ import json
 import urllib.parse
 
 from account.forms import CustomUserCreationForm
+from .utils import verify_recaptcha
 
 
 class RegisterView(FormView):
@@ -36,22 +38,16 @@ def logout_view(request):
 
 
 def login_user(request):
-    if request.method == "POST":
+    if request.user.is_authenticated:
+        return redirect('election:homepage')
+    elif request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
         recaptcha_response = request.POST.get('g-recaptcha-response')
 
         # Weryfikacja reCAPTCHA po stronie serwera
         if recaptcha_response:
-            data = urllib.parse.urlencode({
-                'secret': settings.CAPTCHA_PRIVATE_KEY,
-                'response': recaptcha_response
-            }).encode('utf-8')
-            req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
-            response = urllib.request.urlopen(req)
-            result = json.loads(response.read())
-
-            if result['success']:
+            if verify_recaptcha(recaptcha_response):
                 # Jeśli reCAPTCHA została zweryfikowana, wykonaj autentykację użytkownika
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
@@ -71,3 +67,13 @@ def login_user(request):
 
     # Jeśli nie jest to metoda POST lub uwierzytelnianie się nie powiodło, renderuj szablon logowania z błędem.
     return render(request, 'account/login.html', {'captcha_public_key': settings.CAPTCHA_PUBLIC_KEY})
+
+
+# Widok dla zakladki profil user
+@login_required
+def profile_view(request):
+    # Pobierz aktualnie zalogowanego użytkownika
+    user = request.user
+
+    # Przekazujemy użytkownika do szablonu HTML
+    return render(request, 'account/profile.html', {'user': user})

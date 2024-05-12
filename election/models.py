@@ -17,7 +17,6 @@ class Election(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     max_candidates_choice = models.PositiveIntegerField(default=1)
-    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
