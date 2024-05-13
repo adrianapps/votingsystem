@@ -1,46 +1,15 @@
+{% extends 'election/base.html'%}
+{% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <link rel="stylesheet" href="{% static 'css/election_detail.css' %}">
-        
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-            integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"/>
         <style>
             body{
-                background: url({{ election.image.url }}) no-repeat fixed center;
+                background: url('/media/pictures/glowing_4K.jpg') no-repeat fixed center;
                 background-size: cover;
                 min-height: 200vh;
             }
-            
         </style>
-    </head>
-    <body>
-        <header>
-            <a class="logo" href="{% url 'election:homepage' %}">LOGO</a>
-    
-            <ul>
-                <li><a class="nav-link" href="{% url 'election:homepage' %}">Main Page</a></li>
-                <li><a class="nav-link" href="{% url 'election:about_us_view' %}">About Us</a></li>
-                <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
-    
-                {% if not request.user.is_authenticated %}
-                    <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
-                {% else %}
-                    <li><a class="nav-link" href="{% url 'account:profile' %}">Proflie</a></li>
-                    <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
-                {% endif %}
-    
-                {% if request.user.is_staff %}
-                    <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
-                    <li><a class="nav-link" href="{% url 'election:election-create' %}">Add Election</a></li>
-                {% endif %}
-            </ul>
-        </header>
         <h2 class="title">{{ election.title }} 
             {% if not is_voter %}
             <a href="{% url 'election:voter-create' election.id %}"><button class="sign-in-btn" type="button">Sign in For Voting</button></a>
@@ -50,19 +19,7 @@
         </h2>
         
         <p class="election-description">{{ election.description }}</p>
-        <!-- 
-        {% if candidates %}
-            <form method="post" action="{% url 'election:vote' election.id %}">
-                {% csrf_token %}
-                {% for candidate in candidates %}
-                    <input type="checkbox" name="candidate" value="{{ candidate.id }}"> {{ candidate.name }} <br>
-                {% endfor %}
-                <button type="submit">Vote</button>
-            </form>
-        {% else %}
-            <p>No candidates available for this election.</p>
-        {% endif %}
-        -->
+        
         {% if candidates %}
         <main>
                 <div class="row"> 
@@ -95,8 +52,7 @@
             <p style="text-align:center; justify-content:center; color:#fff;">No candidates available for this election.</p>
         {% endif %}
         
-      
-
+    
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -104,15 +60,4 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <footer>
-            <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
-        </footer>
-
-    </body>
-    <script>
-        window.addEventListener('scroll', function () {
-            var header = document.querySelector("header");
-            header.classList.toggle("sticky", window.scrollY > 0);
-        })
-    </script>
-</html>
+{% endblock %}
