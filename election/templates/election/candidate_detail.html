@@ -1,40 +1,16 @@
+{% extends 'election/base.html' %}
+{% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
         <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'css/candidate.css' %}">
         <style>
             body{
                 background: url("/media/pictures/glowing_4K.jpg") center fixed;
-                
                 background-size: cover;
             }
         </style>
-    </head>
-    <body>
-        <header>
-            <a class="logo" href="{% url 'election:homepage' %}">LOGO</a>
-            <ul>
-                <li><a class="nav-link" href="{% url 'election:homepage' %}">Main Page</a></li>
-                <li><a class="nav-link" href="{% url 'election:about_us_view' %}">About Us</a></li>
-                <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
-    
-                    {% if not request.user.is_authenticated %}
-                        <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
-                            {% else %}
-                        <li><a class="nav-link" href="{% url 'account:profile' %}">Proflie</a></li>
-                        <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
-                    {% endif %}
-    
-                    {% if request.user.is_staff %}
-                        <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
-                    {% endif %}
-            </ul>
-        </header>
+   
         <section class="section">
             <div class="section__container">
                 <div class="content">
@@ -56,28 +32,7 @@
                 </div>
             </div>
         </section>
-        <footer>
-            <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
-    
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-    
-        </footer>
-    
-        <script>
-            window.addEventListener('scroll', function () {
-                var header = document.querySelector("header");
-                header.classList.toggle("sticky", window.scrollY > 0);
-            })
-        </script>
-    </body>
-</html>
-
+        
 
 {{ candidate.name }}
 {% if request.user.is_staff %}
@@ -85,3 +40,4 @@
     <a href="{{ candidate.get_update_url }}">Update</a>
 {% endif %}
 <img src="{{ candidate.picture.url }}" alt="">
+{% endblock %}
