@@ -1,3 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+*
+{
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: .2s linear;
+}
+
+body
+{
+    background: url("/static/images/profile_background.jpg") no-repeat;
+    min-height: 200vh;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
 
 .ui-w-80 {
     width : 80px !important;

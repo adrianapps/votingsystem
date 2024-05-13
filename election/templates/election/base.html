@@ -1,63 +1,57 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Voting</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/static/css/styles.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>E-Voting</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    </head>
+    
+    <body>
+        <header>
+            <a class="logo" href="{% url 'election:homepage' %}">LOGO</a>
 
+            <ul>
+                <li><a class="nav-link" href="{% url 'election:homepage' %}">Main Page</a></li>
+                <li><a class="nav-link" href="{% url 'election:about_us_view' %}">About Us</a></li>
+                <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
 
+                {% if not request.user.is_authenticated %}
+                    <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
+                {% else %}
+                    <li><a class="nav-link" href="{% url 'account:profile' %}">Profile</a></li>
+                    <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+                {% endif %}
 
-<body>
-    <header>
-        <a class="logo" href="{% url 'election:homepage' %}">LOGO</a>
+                {% if request.user.is_staff %}
+                    <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
+                    <li><a class="nav-link" href="{% url 'election:election-create' %}">Add Election</a></li>
+                {% endif %}
+            </ul>
+        </header>
+        {% block content %}
 
-        <ul>
-            <li><a class="nav-link" href="{% url 'election:homepage' %}">Main Page</a></li>
-            <li><a class="nav-link" href="{% url 'election:about_us_view' %}">About Us</a></li>
-            <li><a class="nav-link" href="{% url 'election:contact' %}">Contact
+        {% endblock %}
+        <footer>
+            <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
 
-            {% if not request.user.is_authenticated %}
-                <li><a class="nav-link" href="{% url 'account:login' %}">Login</a>
-            {% else %}
-                <li><a class="nav-link" href="{% url 'account:profile' %}">Proflie</a></li>
-                <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
             {% endif %}
 
-            {% if request.user.is_staff %}
-                <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
-                <li><a class="nav-link" href="{% url 'election:election-create' %}">Add Election</a></li>
-            {% endif %}
-        </ul>
-    </header>
-
-{% block content %}
-{% endblock %}
-
-<footer>
-    <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
-
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-</footer>
-<script>
-    window.addEventListener('scroll', function() {
-        var header = document.querySelector("header");
-        header.classList.toggle("sticky", window.scrollY > 0);
-    })
-</script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+        </footer>
+        <script>
+            window.addEventListener('scroll', function() {
+                var header = document.querySelector("header");
+                header.classList.toggle("sticky", window.scrollY > 0);
+            })
+        </script>
+    </body>
 </html>

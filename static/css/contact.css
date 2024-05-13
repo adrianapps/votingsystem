@@ -149,18 +149,3 @@ body {
         width: 100%;
     }
 }
-.content
-{
-    padding-top: 120px;
-}
-.avatar {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%; /* Okrągły avatar */
-    margin: 0 auto 20px; /* Wyśrodkowanie avataru i dodanie odstępu na dole */
-    transition: transform 0.3s ease; /* Dodanie animacji transformacji */
-}
-
-.avatar:hover {
-    transform: translateY(-10px); /* Unoszenie avatara przy najechaniu kursorem */
-}
