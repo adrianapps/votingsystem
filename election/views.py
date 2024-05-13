@@ -175,7 +175,7 @@ def vote(request, pk):
         return redirect('election:election-list')
 
     messages.success(request, 'Your vote has been cast successfully')
-    return redirect(election.get_result_url())
+    return redirect('election:election-list')
 
 
 class CandidateDetail(DetailView):
