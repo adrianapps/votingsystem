@@ -47,6 +47,13 @@ class ElectionDetail(LoginRequiredMixin, CandidateListMixin, DetailView):
         election = self.get_object()
         if election.has_finished():
             return redirect(election.get_result_url())
+        try:
+            voter = Voter.objects.get(election=election, user=request.user)
+        except Voter.DoesNotExist:
+            voter = None
+        if voter and voter.has_voted:
+            messages.info(request, f"You have already voted in {election.title}")
+            return redirect('election:election-list')
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -140,11 +147,11 @@ def signup_for_election(request, pk):
 @login_required
 def vote(request, pk):
     user = request.user
+    election = get_object_or_404(Election, pk=pk)
     try:
-        election = get_object_or_404(Election, pk=pk)
-        voter = get_object_or_404(Voter, user=user, election=election)
-    except Http404:
-        messages.error(request, 'You are not a voter, or election does not exist')
+        voter = Voter.objects.get(election=election, user=request.user)
+    except Voter.DoesNotExist:
+        messages.error(request, f"You are not a voter in {election.title}")
         return redirect('election:election-list')
 
     if voter.has_voted:
