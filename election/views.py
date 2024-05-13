@@ -146,7 +146,6 @@ def signup_for_election(request, pk):
 
 @login_required
 def vote(request, pk):
-    user = request.user
     election = get_object_or_404(Election, pk=pk)
     try:
         voter = Voter.objects.get(election=election, user=request.user)
@@ -174,15 +173,6 @@ def vote(request, pk):
     except ValidationError as e:
         messages.error(request, str(e))
         return redirect('election:election-list')
-
-    email = EmailMessage(
-        subject=user.username,
-        body=f"Thank you for voting in {election.title}",
-        from_email=EMAIL_HOST_USER,
-        to=[user.email],
-        reply_to=[EMAIL_HOST_USER],
-    )
-    email.send()
 
     messages.success(request, 'Your vote has been cast successfully')
     return redirect(election.get_result_url())
