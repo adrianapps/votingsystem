@@ -47,8 +47,8 @@
                         Sapien. Curabitur Ac Nibh Nulla. Maecenas Nec Augue Placerat, Viverra Tellus Non, Pulvinar Risus.
                     </p>
                     <div class="action__btns">
-                        <button class="delete__me">Delete</button>
-                        <button class="update__me">Update</button>
+                        <a href="{{ candidate.get_delete_url }}"><button>Delete</button></a>
+                        <a href="{{ candidate.get_update_url }}"><button>Update</button></a>
                     </div>
                 </div>
                 <div class="image">
