@@ -12,10 +12,12 @@
     transition: .2s linear;
 }
 
-body{
-    background: url("/media/pictures/orzel.jpg") no-repeat fixed center;
-    background-size: cover;
-    min-height: 200vh;
+:root{
+    --black: #1b1d29;
+    --white: #fff;
+    --btn-red: #fe4c13;
+    --shadow: #cccea7;
+
 }
 
 header
@@ -82,68 +84,219 @@ header.sticky ul li a
 }
 
 
-header
-{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.6s;
-    padding: 40px 100px;
-    z-index: 100000;
+.title{
+    text-align: center;
+    color: #fff;
+    margin-top: 250px;
+    font-weight: 400px;
 }
 
-header.sticky
-{
-    padding: 5px 100px;
+.sign-in-btn{
+    font-size: 12px;
+    font-family: 'Readex Pro', sans-serif;
+    padding: 0.5em 1em;
+    margin: 0.25;
+    border-radius: 1em;
+    border: none;
+    outline: none;
+    background: #ccc;
+    cursor: pointer;
+}
+
+.sign-in-btn:hover{
     background: #fff;
 }
 
-header .logo
-{
-    position: relative;
-    font-weight: 700;
-    color: #fff;
-    text-decoration: none;
-    font-size: 2em;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    transition: 0.6s;
+.signed-in-btn{
+    font-size: 12px;
+    font-family: 'Readex Pro', sans-serif;
+    padding: 0.5em 1em;
+    margin: 0.25;
+    border-radius: 1em;
+    border: none;
+    outline: none;
+    background: #fe4c13;
+    cursor: pointer;
 }
 
-header ul
-{
-    position: relative;
-    display: flex;
+.election-description{
+    color: #fff;
+    text-align: center;
+    margin-top: 50px;
+    font-weight: 400px;
     justify-content: center;
+    padding: 20px;
+}
+
+main{
+    height: 100%;
+}
+
+.row{
+    margin-left: 90px;
+    margin-top: 40px;
+   
+}
+
+.col{
+    margin-top: 20px;
+}
+
+.cards{
+    display: flex;
     align-items: center;
+    flex-direction: column;
+    padding: 5rem 0;
 }
 
-header ul li
-{
-    position: relative;
-    list-style: none;
+.card{
+    width: 25rem;
+    border: 2px solid var(--black);
+    overflow: hidden;
+    box-shadow: 15px 15px 6px var(--shadow);
+    transition: all 0.5s ease;
+    cursor: pointer;
 }
 
-header ul li a
-{
-    position: relative;
-    margin: 0 15px;
-    text-decoration: none;
-    color: #fff;
-    letter-spacing: 2px;
-    font-weight: 500px;
-    transition: 0.6s;
+.card:first-of-type{
+    margin-bottom: 5rem;
 }
 
-header.sticky .logo,
-header.sticky ul li a
-{
-    color: #000;
+.card-image{
+    width: 25rem;
+    height: 20rem;
+    object-fit: cover;
+    vertical-align: middle;
 }
+
+.card-info{
+    display: flex;
+    justify-content: space-evenly;
+    background: var(--white);
+    color: var(--black);
+    padding: 2rem 0;
+}
+
+.candidate-votes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60px;
+}
+
+.votes-number{
+    font-weight: 700;
+    font-size: 2.5rem;
+}
+
+.votes-text{
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.line{
+    width: 0.1rem;
+    background: var(--black);
+}
+
+.candidate-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.candidate-name{
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.candidate-party{
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.card-btn{
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 1.5rem 0;
+    color: var(--white);
+    cursor: pointer;
+    border-top: 2px solid var(--black);
+    transition: all 0.5s ease;
+    background: var(--btn-red);
+
+}
+
+/*Styles for devices that have width at least 768px*/
+@media screen and (min-width: 768px){
+    .cards{
+        flex-direction: row;
+        justify-content: space-around;
+        height: 100%;
+        padding: 0;
+        width: 85%;
+        margin: 0 auto;
+    }
+
+    .card{
+        width: 30rem;
+    }
+
+    .card:first-of-type{
+        margin-bottom: 0;
+    }
+
+    .card-image{
+        width: 30rem;
+        height: 26rem;
+    }
+
+    .votes-number{
+        font-size: 3.5rem;
+    }
+
+    .votes-text{
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .candidate-name{
+        font-size: 2rem;
+    }
+
+    .candidate-party{
+        font-size: 1.1rem;
+    }
+
+    .card-btn{
+        font-size: 2rem;
+    }
+}
+
+/*Styles for devices that have width at least 1024px*/
+@media screen and (min-width: 1024px){
+    .cards{
+        width: 70%;
+    }
+
+    .card:hover{
+        transform: translateY(-2rem);
+    }
+
+    .card:hover .card-btn{
+        font-size: 2.5rem;
+    }
+
+    .btn:hover{
+        background: var(--btn-red-hover);
+    }
+}
+
+
 
 footer {
     position: fixed;

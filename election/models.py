@@ -9,7 +9,7 @@ from PIL import Image
 
 
 class Election(models.Model):
-    DEFAULT_IMAGE = 'pictures/default_election.jpg'
+    DEFAULT_IMAGE = 'pictures/abstract-gradient.jpg'
 
     title = models.CharField(max_length=30)
     description = models.TextField(max_length=500, blank=True)

@@ -10,6 +10,14 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
             integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
             crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <style>
+            body{
+                background: url({{ election.image.url }}) no-repeat fixed center;
+                background-size: cover;
+                min-height: 200vh;
+            }
+            
+        </style>
     </head>
     <body>
         <header>
@@ -33,10 +41,16 @@
                 {% endif %}
             </ul>
         </header>
-        <h1>{{ election.title }} 
+        <h2 class="title">{{ election.title }} 
             {% if not is_voter %}
-            <a href="{% url 'election:voter-create' election.id %}">Signup For Voting</a></h1>
+            <a href="{% url 'election:voter-create' election.id %}"><button class="sign-in-btn" type="button">Sign in For Voting</button></a>
+            {% else %}
+            <button class="signed-in-btn" type="button">Signed In</button>
             {% endif %}
+        </h2>
+        
+        <p class="election-description">{{ election.description }}</p>
+        <!-- 
         {% if candidates %}
             <form method="post" action="{% url 'election:vote' election.id %}">
                 {% csrf_token %}
@@ -48,7 +62,40 @@
         {% else %}
             <p>No candidates available for this election.</p>
         {% endif %}
+        -->
+        {% if candidates %}
+        <main>
+            <form method="post" action="{% url 'election:vote' election.id %}">
+                {% csrf_token %}
+                <div class="row"> 
+                    {% for candidate in candidates %}
+                    <div class="col-lg-4 col-md-6 mb-4" style="margin-top: 60px;">
+                        <div class="card">
+                            <img class="card-image" src="{{ candidate.picture.url }}" alt="Candidate Image">
+                            <div class="card-info">
+                                <div class="candidate-votes">
+                                    <span class="votes-number">{{ candidate.vote_count }}</span>
+                                    <span class="votes-text">VOTES</span>
+                                </div>
+                                <div class="line"></div>
+                                <div class="candidate-info">
+                                    <span class="candidate-name">{{ candidate.name }}</span>
+                                    <span class="candidate-party">{{ candidate.party }}</span>
+                                </div>
+                            </div>
+                            <button class="card-btn" type="submit" name="candidate" value="{{ candidate.id }}">VOTE</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </form>
+        </main>
+        {% else %}
+            <p style="text-align:center; justify-content:center; color:#fff;">No candidates available for this election.</p>
+        {% endif %}
         
+      
+
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -58,9 +105,6 @@
         {% endif %}
         <footer>
             <p>&copy; 2024 Bialystok Univeristy of Technology. Created by Adam A. Adrian R. Mateusz S.</p> <!-- Tekst stopki -->
-        
-
-        
         </footer>
 
     </body>
