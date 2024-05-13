@@ -216,6 +216,37 @@ main{
     font-weight: 600;
 }
 
+.button{
+    position: relative;
+    padding: 10px 22px;
+    background: #000;
+    border-radius: 6px;
+    color: #fe4c13;
+    border: none;
+    font-size: 18px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.button:active{
+    transform: scale(0.96);
+}
+
+.button::before,
+.button::after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 150%;
+    z-index: -1;
+    background-repeat: no-repeat;
+}
+
+
 .card-btn{
     width: 100%;
     border: none;

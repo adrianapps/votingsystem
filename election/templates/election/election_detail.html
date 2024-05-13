@@ -65,8 +65,6 @@
         -->
         {% if candidates %}
         <main>
-            <form method="post" action="{% url 'election:vote' election.id %}">
-                {% csrf_token %}
                 <div class="row"> 
                     {% for candidate in candidates %}
                     <div class="col-lg-4 col-md-6 mb-4" style="margin-top: 60px;">
@@ -81,14 +79,17 @@
                                 <div class="candidate-info">
                                     <span class="candidate-name">{{ candidate.name }}</span>
                                     <span class="candidate-party">{{ candidate.party }}</span>
+                                    <a href="{% url 'election:candidate-detail' pk=candidate.pk %}"><button class="button">Candidate detail</button></a>
                                 </div>
                             </div>
-                            <button class="card-btn" type="submit" name="candidate" value="{{ candidate.id }}">VOTE</button>
+                            <form method="post" action="{% url 'election:vote' election.id %}">
+                                {% csrf_token %}
+                                <button class="card-btn" type="submit" name="candidate" value="{{ candidate.id }}">VOTE</button>
+                            </form>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
-            </form>
         </main>
         {% else %}
             <p style="text-align:center; justify-content:center; color:#fff;">No candidates available for this election.</p>
