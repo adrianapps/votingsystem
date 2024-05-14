@@ -22,31 +22,45 @@
         
         {% if candidates %}
         <main>
+            <form method="post" action="{% url 'election:vote' election.id %}">
+                {% csrf_token %}
                 <div class="row"> 
-                    {% for candidate in candidates %}
-                    <div class="col-lg-4 col-md-6 mb-4" style="margin-top: 60px;">
-                        <div class="card">
-                            <img class="card-image" src="{{ candidate.picture.url }}" alt="Candidate Image">
-                            <div class="card-info">
-                                <div class="candidate-votes">
-                                    <span class="votes-number">{{ candidate.vote_count }}</span>
-                                    <span class="votes-text">VOTES</span>
-                                </div>
-                                <div class="line"></div>
-                                <div class="candidate-info">
-                                    <span class="candidate-name">{{ candidate.name }}</span>
-                                    <span class="candidate-party">{{ candidate.party }}</span>
-                                    <a href="{% url 'election:candidate-detail' pk=candidate.pk %}"><button class="button">Candidate detail</button></a>
+                    {% if election.max_candidates_choice > 1 %}
+                        {% for candidate in candidates %}
+                            <div class="col-lg-4 col-md-6 mb-4" style="margin-top: 60px;">
+                                <div class="card">
+                                    <img class="card-image" src="{{ candidate.picture.url }}" alt="Candidate Image">
+                                    <div class="card-info">
+                                        <div class="candidate-votes">
+                                            <span class="votes-number">{{ candidate.vote_count }}</span>
+                                            <span class="votes-text">VOTES</span>
+                                        </div>
+                                        <div class="line"></div>
+                                        <div class="candidate-info">
+                                            <span class="candidate-name">{{ candidate.name }}</span>
+                                            <span class="candidate-party">{{ candidate.party }}</span>
+                                        </div>
+                                    </div>
+                                    <label>
+                                        <input type="checkbox" name="candidate" value="{{ candidate.id }}"> <span>Vote for {{ candidate.name }}</span>
+                                    </label>
+
+                                    
                                 </div>
                             </div>
-                            <form method="post" action="{% url 'election:vote' election.id %}">
-                                {% csrf_token %}
-                                <button class="card-btn" type="submit" name="candidate" value="{{ candidate.id }}">VOTE</button>
-                            </form>
-                        </div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        {% for candidate in candidates %}
+                        <input type="checkbox" name="candidate" value="{{ candidate.id }}"> <span>Vote for {{ candidate.name }}</span>
+                        {% endfor %}
+                    {% endif %}
                 </div>
+                <div class="container">
+                    <div>
+                        <button class="confirm-vote" type="submit">Confirm Vote</button>
+                    </div>
+                </div>
+            </form>
         </main>
         {% else %}
             <p style="text-align:center; justify-content:center; color:#fff;">No candidates available for this election.</p>
