@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Election, Candidate, Party, Vote, Voter
+from .models import Election, Candidate, Party, Vote, Voter, SentEmail
 
 
 class CandidateInLine(admin.TabularInline):
@@ -28,9 +28,15 @@ class CandidateAdmin(admin.ModelAdmin):
         ("Candidate's election", {"fields": ["election"]})
     ]
 
+class SentEmailAdmin(admin.ModelAdmin):
+    readonly_fields = ["timestamp"]
+    list_display = ["subject", "recipient", "timestamp"]
+
 
 admin.site.register(Election, ElectionAdmin)
 admin.site.register(Candidate, CandidateAdmin)
 admin.site.register(Party)
 admin.site.register(Vote)
 admin.site.register(Voter, VoterAdmin)
+admin.site.register(SentEmail, SentEmailAdmin)
+

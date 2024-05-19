@@ -117,3 +117,15 @@ class Vote(models.Model):
             raise ValidationError(f"You can only choose up to {self.election.max_candidates_choice} candidates")
         elif self.timestamp >= self.election.end_date:
             raise ValidationError(f"The {self.election.title} has already ended")
+
+
+class SentEmail(models.Model):
+    sender = models.EmailField()
+    recipient = models.EmailField()
+    subject = models.CharField(max_length=100)
+    body = models.TextField()
+    reply_to = models.EmailField(blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"From {self.reply_to} to {self.recipient}"
