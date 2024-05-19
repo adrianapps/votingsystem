@@ -17,7 +17,7 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
 from votingsystem.settings import EMAIL_HOST_USER
-from .models import Election, Candidate, Voter
+from .models import Election, Candidate, Voter, SentEmail
 from .services import create_vote, create_voter, is_voter
 from .mixins import CandidateListMixin, StaffMemberRequiredMixin
 from .utils import generate_chart
@@ -212,11 +212,18 @@ class Contact(FormView):
         email = EmailMessage(
             subject=name,
             body=content,
-            from_email=email_from,
+            from_email=EMAIL_HOST_USER,
             to=[EMAIL_HOST_USER],
             reply_to=[email_from],
         )
         email.send()
+        SentEmail.objects.create(
+            sender=EMAIL_HOST_USER,
+            recipient=EMAIL_HOST_USER,
+            subject=name,
+            body=content,
+            reply_to=email_from,
+        )
         messages.success(self.request, f"{name}, your email has been sent successfully")
         return super().form_valid(form)
 
