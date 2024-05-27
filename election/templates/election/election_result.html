@@ -1,25 +1,27 @@
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{% extends 'election/base.html' %}
+{% block content %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/election_result.css' %}">
+    
 
-<h1>{{ election.title }}</h1>
-{% if request.user.is_staff %}
-    <a href="{{ election.get_update_url }}">Update</a>
-    <a href="{{ election.get_delete_url }}">Delete</a>
-{% endif %}
+    <h1>Results for {{ election.title }}</h1>
+    
 
-{% if candidates %}
-    {% for candidate in candidates %}
-        <p><a href="{{ candidate.get_absolute_url }}">{{ candidate.name }}</a> {{ candidate.vote_count }} votes</p>
-    {% endfor %}
-    <a href="{% url 'election:generate-pdf' election.pk %}">Generate PDF</a>
-{% else %}
-    <p>No candidates available for this election.</p>
-
-{% endif %}
-
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% if candidates %}
+        {% for candidate in candidates %}
+            <p><a href="{{ candidate.get_absolute_url }}">{{ candidate.name }}</a> {{ candidate.vote_count }} votes</p>
         {% endfor %}
-    </ul>
-{% endif %}
+        <a href="{% url 'election:generate-pdf' election.pk %}">Generate PDF</a>
+    {% else %}
+        <p>No candidates available for this election.</p>
+
+    {% endif %}
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

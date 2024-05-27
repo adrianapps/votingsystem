@@ -17,6 +17,10 @@
             <button class="signed-in-btn" type="button">Signed In</button>
             {% endif %}
         </h2>
+        {% if request.user.is_staff %}
+            <a href="{{ election.get_update_url }}" class="button">Update</a>
+            <a href="{{ election.get_delete_url }}" class="button">Delete</a>
+        {% endif %}
         
         <p class="election-description">{{ election.description }}</p>
         
