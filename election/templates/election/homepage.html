@@ -67,6 +67,20 @@
                 </nav>
             </div>
         </div>
+        {% if request.user.is_staff %}
+        <div class="box-container">
+            <div class="box">
+                <i class="fa-solid fa-pen-to-square" style="font-size: 70px;"></i>
+                <h3>Create new vote</h3>
+                <a href="{% url 'election:election-create' %}" class="btn">Create Vote</a>
+            </div>
+            <div class="box">
+                <i class="fa-solid fa-user" style="font-size: 70px;"></i>
+                <h3>Add new candidate</h3>
+                <a href="{% url 'election:candidate-create' %}" class="btn">Add Candidate</a>
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <script>
