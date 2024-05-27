@@ -297,7 +297,7 @@ def generate_pdf(request, pk):
 
     c.showPage()
     c.save()
-    os.remove(chart)
+    
     buf.seek(0)
 
     return FileResponse(buf, as_attachment=True, filename='result.pdf')

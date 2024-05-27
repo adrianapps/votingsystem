@@ -19,7 +19,9 @@
         </tr>
         {% endfor %}
     </table>
-    <button class="button"><a href="{% url 'election:generate-pdf' election.pk %}" class="button">Generate PDF</a></button>
+    <div class="buttons">
+        <button class="button"><a href="{% url 'election:generate-pdf' election.pk %}" class="button">Generate PDF</a></button>
+    </div>
 
     {% else %}
         <p>No candidates available for this election.</p>
