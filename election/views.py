@@ -283,21 +283,12 @@ def generate_pdf(request, pk):
 
     buf = io.BytesIO()
     c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
-    textob = c.beginText()
-    textob.setTextOrigin(inch, inch)
-    textob.setFont("Helvetica", 14)
-
-    for name, votes in zip(candidate_names, candidate_votes):
-        textob.textLine(f"{name} {votes} votes")
-    c.drawText(textob)
 
     chart = generate_chart(candidate_names, candidate_votes)
     c.scale(1, -1)
     c.drawImage(chart, 100, -100, width=400, height=-300)
-
     c.showPage()
     c.save()
-    
     buf.seek(0)
 
     return FileResponse(buf, as_attachment=True, filename='result.pdf')
