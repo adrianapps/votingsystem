@@ -6,12 +6,21 @@
 
     <h1>Results for {{ election.title }}</h1>
     
-
     {% if candidates %}
+    <table>
+        <tr>
+            <th>Candidate name</th>
+            <th>Candidate votes</th>
+        </tr>
         {% for candidate in candidates %}
-            <p><a href="{{ candidate.get_absolute_url }}">{{ candidate.name }}</a> {{ candidate.vote_count }} votes</p>
+        <tr>
+            <td>{{ candidate.name }}</td>
+            <td> {{ candidate.vote_count }}</td>
+        </tr>
         {% endfor %}
-        <a href="{% url 'election:generate-pdf' election.pk %}">Generate PDF</a>
+    </table>
+    <button class="button"><a href="{% url 'election:generate-pdf' election.pk %}" class="button">Generate PDF</a></button>
+
     {% else %}
         <p>No candidates available for this election.</p>
 
