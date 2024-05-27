@@ -26,11 +26,6 @@
                     <li><a class="nav-link" href="{% url 'account:profile' %}">Profile</a></li>
                     <li><a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
                 {% endif %}
-
-                {% if request.user.is_staff %}
-                    <li><a class="nav-link" href="{% url 'election:candidate-create' %}">Add Candidate</a></li>
-                    <li><a class="nav-link" href="{% url 'election:election-create' %}">Add Election</a></li>
-                {% endif %}
             </ul>
         </header>
         {% block content %}
