@@ -19,7 +19,10 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 CAPTCHA_PUBLIC_KEY = os.getenv('CAPTCHA_PUBLIC_KEY')
 CAPTCHA_PRIVATE_KEY = os.getenv('CAPTCHA_PRIVATE_KEY')
 
+ENV_ALLOWED_HOST = os.environ.get('DJANGO_ALLOWED_HOST') or None
 ALLOWED_HOSTS = []
+if not DEBUG:
+    ALLOWED_HOSTS += [os.environ.get('DJANGO_ALLOWED_HOST')]
 
 # Application definition
 
