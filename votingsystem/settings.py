@@ -23,6 +23,8 @@ ENV_ALLOWED_HOST = os.environ.get('DJANGO_ALLOWED_HOST') or None
 ALLOWED_HOSTS = []
 if not DEBUG:
     ALLOWED_HOSTS += [os.environ.get('DJANGO_ALLOWED_HOST')]
+else:
+    ALLOWED_HOSTS += ['*']
 
 # Application definition
 
