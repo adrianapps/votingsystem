@@ -1,11 +1,33 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.http import Http404
-from django.shortcuts import reverse, get_object_or_404, redirect
+from django.shortcuts import reverse
 from django.db import models
 from django.utils import timezone
 
 from PIL import Image
+
+
+class Category(models.Model):
+    """
+    Represents categories of elections
+
+    Attributes
+    ----------
+    name: CharField
+      The name of the category  
+    """
+    name = models.CharField(max_length=80)
+
+    def __str__(self):
+        """
+        Returns the name of the category.
+
+        Returns
+        -------
+        str
+            The name of the category.
+        """
+        return self.name
 
 
 class Election(models.Model):
@@ -18,6 +40,8 @@ class Election(models.Model):
       The default image used for elections.
     title : CharField
       The title of the election.
+    categories: ManyToManyField
+      categories of the election
     description : TextField
       A detailed description of the election.
     image : ImageField
@@ -30,9 +54,9 @@ class Election(models.Model):
       The maximum number of candidates a voter can choose.
     """
     DEFAULT_IMAGE = 'pictures/abstract-gradient.jpg'
-
     title = models.CharField(max_length=30)
     description = models.TextField(max_length=500, blank=True)
+    categories = models.ManyToManyField(Category, blank=True)
     image = models.ImageField(default=DEFAULT_IMAGE, upload_to='pictures/', blank=True, null=True)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()

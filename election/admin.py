@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Election, Candidate, Party, Vote, Voter, SentEmail
+from .models import Election, Candidate, Party, Vote, Voter, SentEmail, Category
 
 
 class CandidateInLine(admin.TabularInline):
@@ -32,7 +32,7 @@ class ElectionAdmin(admin.ModelAdmin):
         The fields to display in the list view of the admin interface.
     """
     fieldsets = [
-        (None, {"fields": ["title", "description", "image", "max_candidates_choice"]}),
+        (None, {"fields": ["title", "categories", "description", "image", "max_candidates_choice"]}),
         ("Date information", {"fields": ["start_date", "end_date"]}),
     ]
     inlines = [CandidateInLine]
@@ -89,4 +89,5 @@ admin.site.register(Party)
 admin.site.register(Vote)
 admin.site.register(Voter, VoterAdmin)
 admin.site.register(SentEmail, SentEmailAdmin)
+admin.site.register(Category)
 
