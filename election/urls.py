@@ -1,7 +1,8 @@
 from django.urls import path
 
 from .views import (ElectionList, ElectionDetail, ElectionResult, ElectionUpdate, ElectionDelete,
-                    ElectionCreate, CandidateCreate, CandidateDetail, CandidateUpdate, CandidateDelete, Contact)
+                    ElectionCreate, CandidateCreate, CandidateDetail, CandidateUpdate, 
+                    CandidateDelete, Contact, PartyDetail)
 from . import views
 
 app_name = 'election'
@@ -22,6 +23,7 @@ urlpatterns = [
     path('candidate/<int:pk>/update', CandidateUpdate.as_view(), name='candidate-update'),
     path('candidate/<int:pk>/delete', CandidateDelete.as_view(), name='candidate-delete'),
     path('candidate/add', CandidateCreate.as_view(), name='candidate-create'),
+    path('party/<int:pk>', PartyDetail.as_view(), name='party-detail'), 
     path('contact/', Contact.as_view(), name='contact'),
     path('about_us/', views.about_us_view, name='about_us_view'),
 ]

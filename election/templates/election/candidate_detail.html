@@ -17,15 +17,16 @@
                     <p class="subtitle">{{ candidate.party }}</p>
                     <h1 class="title">I'm<span>{{ candidate.name }}</span></h1>
                     <p class="description">
-                        Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Mauris Nunc Arcu, 
-                        Dignissim Sit Amet Sollicitudin Iaculis, Vehicula Id Urna. Sed Luctus Urna Nunc. 
-                        Donec Fermentum, Magna Sit Amet Rutrum Pretium, Turpis Dolor Molestie Diam, Ut Lacinia Diam Risus Eleifend 
-                        Sapien. Curabitur Ac Nibh Nulla. Maecenas Nec Augue Placerat, Viverra Tellus Non, Pulvinar Risus.
+                        {{ candidate.description }}
                     </p>
-                    <div class="action__btns">
-                        <a href="{{ candidate.get_delete_url }}"><button>Delete</button></a>
-                        <a href="{{ candidate.get_update_url }}"><button>Update</button></a>
-                    </div>
+
+                    {% if request.user.is_staff %}
+                        <div class="action__btns">
+                            <a href="{{ candidate.get_delete_url }}"><button>Delete</button></a>
+                            <a href="{{ candidate.get_update_url }}"><button>Update</button></a>
+                        </div>
+                    {% endif %}
+
                 </div>
                 <div class="image">
                     <img src="{{ candidate.picture.url }}"alt="profile">

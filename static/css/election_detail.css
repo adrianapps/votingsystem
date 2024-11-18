@@ -380,3 +380,12 @@ footer {
     align-items: center;
     backdrop-filter: blur(20px);
 }
+
+.election-categories {
+    font-size: 0.9rem; 
+    color: #fff;  
+    margin-top: 8px;  
+    font-style: italic; 
+    line-height: 1.4; 
+    text-align: center;
+}

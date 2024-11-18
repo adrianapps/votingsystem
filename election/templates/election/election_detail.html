@@ -17,6 +17,14 @@
             <button class="signed-in-btn" type="button">Signed In</button>
             {% endif %}
         </h2>
+
+        <p class="election-categories">
+            Categories: 
+            {% for category in election.categories.all %}
+                {{ category.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+
         {% if request.user.is_staff %}
             <a href="{{ election.get_update_url }}" class="button">Update</a>
             <a href="{{ election.get_delete_url }}" class="button">Delete</a>
@@ -41,8 +49,12 @@
                                         </div>
                                         <div class="line"></div>
                                         <div class="candidate-info">
-                                            <span class="candidate-name">{{ candidate.name }}</span>
-                                            <span class="candidate-party">{{ candidate.party }}</span>
+                                            <span class="candidate-name">
+                                                <a href="{{ candidate.get_absolute_url }}">{{ candidate.name }}</a>
+                                            </span>
+                                            <span class="candidate-party">
+                                                <a href="{{ candidate.party.get_absolute_url }}">{{ candidate.party }}</a>
+                                            </span>
                                         </div>
                                     </div>
                                     <label>

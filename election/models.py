@@ -7,7 +7,7 @@ from django.utils import timezone
 from PIL import Image
 
 
-class Category(models.Model):
+class ElectionCategory(models.Model):
     """
     Represents categories of elections
 
@@ -15,6 +15,29 @@ class Category(models.Model):
     ----------
     name: CharField
       The name of the category  
+    """
+    name = models.CharField(max_length=80)
+
+    def __str__(self):
+        """
+        Returns the name of the category.
+
+        Returns
+        -------
+        str
+            The name of the category.
+        """
+        return self.name
+
+
+class PartyCategory(models.Model):
+    """
+    Represents categories of parties
+
+    Attributes
+    ----------
+    name: CharField
+      The name of the party  
     """
     name = models.CharField(max_length=80)
 
@@ -56,7 +79,7 @@ class Election(models.Model):
     DEFAULT_IMAGE = 'pictures/abstract-gradient.jpg'
     title = models.CharField(max_length=30)
     description = models.TextField(max_length=500, blank=True)
-    categories = models.ManyToManyField(Category, blank=True)
+    categories = models.ManyToManyField(ElectionCategory, blank=True)
     image = models.ImageField(default=DEFAULT_IMAGE, upload_to='pictures/', blank=True, null=True)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
@@ -162,8 +185,12 @@ class Party(models.Model):
     __str__()
         Returns the name of the party.
     """
+    DEFAULT_PICTURE = 'pictures/default_party.jpg'
+
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=500, blank=True)
+    categories = models.ManyToManyField(PartyCategory, blank=True)
+    picture = models.ImageField(default=DEFAULT_PICTURE, upload_to='pictures/', blank=True, null=True)
     creation_date = models.DateField(auto_now_add=True)
 
     def __str__(self):
@@ -176,6 +203,17 @@ class Party(models.Model):
            The name of the party.
         """
         return self.name
+
+    def get_absolute_url(self):
+        """
+        Returns the URL to view the party details.
+
+        Returns
+        -------
+        str
+           The URL to view the party details.
+        """
+        return reverse('election:party-detail', kwargs={'pk': self.pk})
 
 
 class Candidate(models.Model):
@@ -199,6 +237,7 @@ class Candidate(models.Model):
 
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
+    description = models.TextField(max_length=500, blank=True)
     picture = models.ImageField(default=DEFAULT_PICTURE, upload_to='pictures/', blank=True, null=True)
     party = models.ForeignKey(Party, on_delete=models.CASCADE, blank=True, null=True)
 

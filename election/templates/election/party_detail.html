@@ -1,0 +1,39 @@
+
+{% extends 'election/base.html' %}
+{% block content %}
+{% load static %}
+
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/candidate.css' %}">
+        <style>
+            body{
+                background: url("/media/pictures/glowing_4K.jpg") center fixed;
+                background-size: cover;
+            }
+        </style>
+   
+        <section class="section">
+            <div class="section__container">
+                <div class="content">
+                    {% for category in party.categories.all %}
+                        <p class="subtitle">{{ category.name }}</p>
+                    {% endfor %}
+                    <h1 class="title">I'm<span>{{ party.name }}</span></h1>
+                    <p class="description">
+                        {{ party.description }}
+                    </p>
+
+                    {% comment %} {% if request.user.is_staff %}
+                        <div class="action__btns">
+                            <a href="{{ candidate.get_delete_url }}"><button>Delete</button></a>
+                            <a href="{{ candidate.get_update_url }}"><button>Update</button></a>
+                        </div>
+                    {% endif %} {% endcomment %}
+
+                </div>
+                <div class="image">
+                    <img src="{{ party.picture.url }}"alt="profile">
+                </div>
+            </div>
+        </section>
+{% endblock %}

@@ -17,7 +17,7 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
 from votingsystem.settings import EMAIL_HOST_USER
-from .models import Election, Candidate, Voter, SentEmail
+from .models import Election, Candidate, Voter, SentEmail, Party
 from .services import create_vote, create_voter, is_voter
 from .mixins import CandidateListMixin, StaffMemberRequiredMixin
 from .utils import generate_chart
@@ -598,3 +598,18 @@ def search(request):
         'query': query
     }
     return render(request, 'election/search.html', context)
+
+
+class PartyDetail(DetailView):
+    """
+    Displays the details of a specific candidate.
+
+    Attributes
+    ----------
+    model : Model
+        The model that this view will be displaying.
+    context_object_name : str
+        The name of the context variable that will contain the object.
+    """
+    model = Party 
+    context_object_name = 'party'

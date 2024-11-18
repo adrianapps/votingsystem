@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Election, Candidate, Party, Vote, Voter, SentEmail, Category
+from .models import Election, Candidate, Party, Vote, Voter, SentEmail, ElectionCategory, PartyCategory 
 
 
 class CandidateInLine(admin.TabularInline):
@@ -64,7 +64,7 @@ class CandidateAdmin(admin.ModelAdmin):
     """
     list_display = ["name", "election", "party"]
     fieldsets = [
-        (None, {"fields": ["name", "party", "picture"]}),
+        (None, {"fields": ["name", "party", "picture", "description"]}),
         ("Candidate's election", {"fields": ["election"]})
     ]
 
@@ -89,5 +89,6 @@ admin.site.register(Party)
 admin.site.register(Vote)
 admin.site.register(Voter, VoterAdmin)
 admin.site.register(SentEmail, SentEmailAdmin)
-admin.site.register(Category)
+admin.site.register(ElectionCategory)
+admin.site.register(PartyCategory)
 
